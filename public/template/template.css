@@ -1,0 +1,61 @@
+
+@media only screen and (min-width: 800px) {
+    .container {
+        margin-top: 1rem;
+    }
+   
+}
+
+.page-content {
+    display: none;
+    min-height: 600px;
+    /* border: solid 1px #eee;
+    padding: 1ex; */
+}
+
+.container {
+    background-color: #fafafa;
+    border: solid 1px #eee;
+    max-width: 1000px;
+}
+
+.jumbotron {
+    padding: 1ex;
+    margin: 1ex 0;
+    color: white;
+    background-color: rgb(0, 66, 137);
+    font-family: 'NimbusSanNovCon-med', sans-serif;
+    min-height: 50px;
+}
+
+.jumbotron h4 {
+    margin-top: 0.5ex;
+}
+
+.english {
+    margin-top: 1ex;
+    font-size: 2ex;
+    color: white;
+}
+
+.te-reo {
+    color: #F9A100;
+    font-size: 2ex;
+}
+
+.footer-logo {
+    float: right;
+    margin-top: 0.5ex;
+}
+
+.english a {
+    color: white;
+}
+
+.te-reo a {
+    color: #F9A100;
+}
+
+.english a:hover, .te-reo a:hover {
+    color: #FDFCDC;
+}
