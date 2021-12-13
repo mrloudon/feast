@@ -13,7 +13,10 @@ fs.readdir(directoryPath, function (err, files) {
     files.forEach(function (file) {
         // Do whatever you want to do with the file
         console.log(file);
-        arr += `"emoji/${file}",`;
+        arr += `{
+            path: "emoji/${file}",
+            label: ""
+        },`;
     });
 
     console.log(arr);

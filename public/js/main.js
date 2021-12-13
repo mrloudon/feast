@@ -1,9 +1,36 @@
 import * as Utility from "./utility.mjs";
 
 const tasks = [doIntroPage, doWordsPage, doInterBlockPage, doEmojiPage, doGoodbyePage];
-const emojiFiles = ["emoji/Angry face.svg", "emoji/Anguished face.svg", "emoji/Astonished face.svg", "emoji/Cold face.svg", "emoji/Face screaming in fear.svg",
-    "emoji/Grinning face.svg", "emoji/Kissing face with closed eyes.svg", "emoji/Smiling face.svg"];
+/* const emojiFiles = ["emoji/Angry face.svg", "emoji/Anguished face.svg", "emoji/Astonished face.svg", "emoji/Cold face.svg", "emoji/Face screaming in fear.svg",
+    "emoji/Grinning face.svg", "emoji/Kissing face with closed eyes.svg", "emoji/Smiling face.svg"]; */
 const emojis = [];
+const emojiArray = [
+    {
+        path: "emoji/Angry face.svg",
+        label: "angry"
+    }, {
+        path: "emoji/Anguished face.svg",
+        label: "anguished"
+    }, {
+        path: "emoji/Astonished face.svg",
+        label: "astonished"
+    }, {
+        path: "emoji/Cold face.svg",
+        label: "cold"
+    }, {
+        path: "emoji/Face screaming in fear.svg",
+        label: "fear"
+    }, {
+        path: "emoji/Grinning face.svg",
+        label: "grinning"
+    }, {
+        path: "emoji/Kissing face with closed eyes.svg",
+        label: "kissing"
+    }, {
+        path: "emoji/Smiling face.svg",
+        label: "smiling"
+    }
+];
 const words = ["Happy", "Sad", "Disgust", "Anger", "Fear", "Love", "Hate"];
 const params = {
     mode: "",
@@ -24,17 +51,17 @@ function doEmojiPage(callback) {
     let ignoreKeypresses = true;
 
     function endTrial(timedOut, responseTime, response) {
-        csv += `,"${timedOut}",${Math.round(responseTime)},"${response}"`;
+        csv += `,"${emojiArray[currentImage - 1].label}","${timedOut}",${Math.round(responseTime)},"${response}"`;
         console.log(csv);
         if (timer) {
             window.clearTimeout(timer);
             timer = null;
         }
-        if (currentImage < emojiFiles.length) {
+        if (currentImage < emojiArray.length) {
             doTrial();
         }
         else {
-            console.log("Emoji done",timer, currentImage);
+            console.log("Emoji done", timer, currentImage);
             document.body.removeEventListener("keydown", keyDown);
             Utility.fadeOut(page)
                 .then(() => {
@@ -47,7 +74,7 @@ function doEmojiPage(callback) {
 
     function keyDown(evt) {
         console.log("Emoji page keypress");
-        if(ignoreKeypresses){
+        if (ignoreKeypresses) {
             return;
         }
         if (validKeys[evt.keyCode]) {
@@ -58,7 +85,7 @@ function doEmojiPage(callback) {
     async function doTrial() {
         ignoreKeypresses = true;
         emojiImg.style.visibility = "hidden";
-        emojiImg.src = emojiFiles[currentImage++];
+        emojiImg.src = emojiArray[currentImage++].path;
         await Utility.wait(ITI);
         window.requestAnimationFrame(timeStamp => {
             emojiImg.style.visibility = "visible";
@@ -105,7 +132,7 @@ function doWordsPage(callback) {
     let ignoreKeypresses = true;
 
     function endTrial(timedOut, responseTime, response) {
-        csv += `,"${timedOut}",${Math.round(responseTime)},"${response}"`;
+        csv += `,"${wordSpan.innerText.toLowerCase()}","${timedOut}",${Math.round(responseTime)},"${response}"`;
         console.log(csv);
         if (timer) {
             window.clearTimeout(timer);
@@ -127,7 +154,7 @@ function doWordsPage(callback) {
 
     function keyDown(evt) {
         console.log("Word page keypress");
-        if(ignoreKeypresses){
+        if (ignoreKeypresses) {
             return;
         }
         if (validKeys[evt.keyCode]) {
@@ -225,9 +252,9 @@ function nextTask(err, result) {
 
 function preloadImages() {
     let image;
-    for (let fileName of emojiFiles) {
+    for (let item of emojiArray) {
         image = new Image();
-        image.src = fileName;
+        image.src = item.path;
         emojis.push(image);
     }
     console.log(emojis);
