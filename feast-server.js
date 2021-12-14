@@ -5,7 +5,7 @@ const fs = require("fs");
 
 const OUTPUT_FILE = "public/ChSgHo1TwE.csv";
 const app = express()
-const port = 3001
+const port = 8000
 
 app.use(express.json());
 app.disable("x-powered-by");
@@ -20,7 +20,6 @@ app.post("/submit", (req, resp) => {
     const ip = req.headers["x-forwarded-for"] || req.ip;
 
     function writeCSV(csv) {
-        console.log(csv);
         fs.appendFile(OUTPUT_FILE, csv, () => { });
 
         /* fs.stat(OUTPUT_FILE, function (err, stat) {
