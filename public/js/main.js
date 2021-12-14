@@ -151,7 +151,7 @@ function doWordsPage(callback) {
     }
 
     function keyDown(evt) {
-        console.log("Word page keypress");
+        console.log("Word page keypress", evt.keyCode);
         if (ignoreKeypresses) {
             return;
         }
