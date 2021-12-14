@@ -1,6 +1,6 @@
 import * as Utility from "./utility.mjs";
 
-const tasks = [doIntroPage, doWordsPage, doInterBlockPage, doEmojiPage, doGoodbyePage];
+const tasks = [doIntroPage, doBlock1, doInterBlockPage, doBlock2, doGoodbyePage];
 /* const emojiFiles = ["emoji/Angry face.svg", "emoji/Anguished face.svg", "emoji/Astonished face.svg", "emoji/Cold face.svg", "emoji/Face screaming in fear.svg",
     "emoji/Grinning face.svg", "emoji/Kissing face with closed eyes.svg", "emoji/Smiling face.svg"]; */
 const emojis = [];
@@ -34,7 +34,9 @@ const emojiArray = [
 const words = ["Happy", "Sad", "Disgust", "Anger", "Fear", "Love", "Hate"];
 const params = {
     mode: "",
-    order: ""
+    order: "",
+    emojiCSV: "",
+    wordsCSV: ""
 };
 
 function doEmojiPage(callback) {
@@ -46,13 +48,11 @@ function doEmojiPage(callback) {
     let startTime = 0;
     let timer;
     let validKeys;
-    let csv = "";
     let jumbotrons;
     let ignoreKeypresses = true;
 
     function endTrial(timedOut, responseTime, response) {
-        csv += `,"${emojiArray[currentImage - 1].label}","${timedOut}",${Math.round(responseTime)},"${response}"`;
-        console.log(csv);
+        params.emojiCSV += `,"${emojiArray[currentImage - 1].label}","${timedOut}",${Math.round(responseTime)},"${response}"`;
         if (timer) {
             window.clearTimeout(timer);
             timer = null;
@@ -127,13 +127,11 @@ function doWordsPage(callback) {
     let startTime = 0;
     let timer;
     let validKeys;
-    let csv = "";
     let jumbotrons;
     let ignoreKeypresses = true;
 
     function endTrial(timedOut, responseTime, response) {
-        csv += `,"${wordSpan.innerText.toLowerCase()}","${timedOut}",${Math.round(responseTime)},"${response}"`;
-        console.log(csv);
+        params.wordsCSV += `,"${wordSpan.innerText.toLowerCase()}","${timedOut}",${Math.round(responseTime)},"${response}"`;
         if (timer) {
             window.clearTimeout(timer);
             timer = null;
@@ -198,6 +196,24 @@ function doWordsPage(callback) {
         .then(doTrial);
 }
 
+function doBlock1(callback) {
+    switch (params.order) {
+        case "order-1": doEmojiPage(callback);
+            break;
+        case "order-2": doWordsPage(callback);
+            break;
+    }
+}
+
+function doBlock2(callback) {
+    switch (params.order) {
+        case "order-1": doWordsPage(callback);
+            break;
+        case "order-2": doEmojiPage(callback);
+            break;
+    }
+}
+
 function doIntroPage(callback) {
     const page = document.getElementById("landing-page");
     const nextBtn = page.querySelector("button.next-btn");
@@ -233,6 +249,8 @@ function doInterBlockPage(callback) {
 
 function doGoodbyePage() {
     console.log("Do goodbye page");
+    const csv = `"${params.mode}","${params.order}","${params.wordsCSV}","${params.emojiCSV}"\n`;
+    Utility.postCSV(csv);
     const page = document.getElementById("goodbye-page");
     Utility.fadeIn(page);
 }
