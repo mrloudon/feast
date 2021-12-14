@@ -5,7 +5,7 @@ const fs = require("fs");
 
 const OUTPUT_FILE = "public/ChSgHo1TwE.csv";
 const app = express()
-const port = 8000
+const port = 8010
 
 app.use(express.json());
 app.disable("x-powered-by");
