@@ -249,7 +249,7 @@ function doInterBlockPage(callback) {
 
 function doGoodbyePage() {
     console.log("Do goodbye page");
-    const csv = `"${params.mode}","${params.order}","${params.wordsCSV}","${params.emojiCSV}"\n`;
+    const csv = `"${params.mode}","${params.order}"${params.wordsCSV}${params.emojiCSV}"\n`;
     Utility.postCSV(csv);
     const page = document.getElementById("goodbye-page");
     Utility.fadeIn(page);
