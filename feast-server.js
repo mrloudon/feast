@@ -4,7 +4,7 @@ const express = require("express");
 const fs = require("fs");
 
 const OUTPUT_FILE = "public/ChSgHo1TwE.csv";
-const app = express()
+const app = express();
 const port = 8010
 
 app.use(express.json());
@@ -15,7 +15,7 @@ app.get('/hi', (req, res) => {
     res.send('Hello World!');
 })
 
-app.post("/submit", (req, resp) => {
+app.post(["/submit", "/feast/submit"], (req, resp) => {
     const dt = new Date();
     const ip = req.headers["x-forwarded-for"] || req.ip;
 
