@@ -159,6 +159,9 @@ function doWordsPage(callback) {
         }
         if (validKeys[evt.keyCode]) {
             endTrial("F", Date.now() - startTime, validKeys[evt.keyCode]);
+            evt.preventDefault();
+            evt.stopPropagation();
+            return false;
         }
     }
 
