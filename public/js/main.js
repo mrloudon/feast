@@ -286,6 +286,7 @@ function preloadImages() {
 function run() {
     console.log("Running.");
     preloadImages();
+    document.body.style.overflow = "hidden";
     nextTask();
 }
 
