@@ -52,6 +52,7 @@ function doEmojiPage(callback) {
     let ignoreKeypresses = true;
 
     function endTrial(timedOut, responseTime, response) {
+        console.log(responseTime, "ms");
         params.emojiCSV += `,"${emojiArray[currentImage - 1].label}","${timedOut}",${Math.round(responseTime)},"${response}"`;
         if (timer) {
             window.clearTimeout(timer);
@@ -131,6 +132,7 @@ function doWordsPage(callback) {
     let ignoreKeypresses = true;
 
     function endTrial(timedOut, responseTime, response) {
+        console.log(responseTime, "ms");
         params.wordsCSV += `,"${wordSpan.innerText.toLowerCase()}","${timedOut}",${Math.round(responseTime)},"${response}"`;
         if (timer) {
             window.clearTimeout(timer);
@@ -165,10 +167,10 @@ function doWordsPage(callback) {
         wordSpan.style.visibility = "hidden";
         wordSpan.innerHTML = words[currentWord++];
         await Utility.wait(ITI);
-        window.requestAnimationFrame(timeStamp => {
+        window.requestAnimationFrame(() => {
             wordSpan.style.visibility = "visible";
             ignoreKeypresses = false;
-            startTime = timeStamp;
+            startTime = Date.now();
             timer = window.setTimeout(() => {
                 timer = null;
                 endTrial("T", 0, "None");
