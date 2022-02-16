@@ -87,10 +87,10 @@ function doEmojiPage(callback) {
         emojiImg.style.visibility = "hidden";
         emojiImg.src = emojiArray[currentImage++].path;
         await Utility.wait(ITI);
-        window.requestAnimationFrame(timeStamp => {
+        window.requestAnimationFrame(() => {
             emojiImg.style.visibility = "visible";
             ignoreKeypresses = false;
-            startTime = timeStamp;
+            startTime = Date.now();
             timer = window.setTimeout(() => {
                 timer = null;
                 endTrial("T", 0, "None");
@@ -156,7 +156,7 @@ function doWordsPage(callback) {
             return;
         }
         if (validKeys[evt.keyCode]) {
-            endTrial("F", evt.timeStamp - startTime, validKeys[evt.keyCode]);
+            endTrial("F", Date.now() - startTime, validKeys[evt.keyCode]);
         }
     }
 
@@ -249,7 +249,7 @@ function doInterBlockPage(callback) {
 
 function doGoodbyePage() {
     console.log("Do goodbye page");
-    const csv = `"${params.mode}","${params.order}"${params.wordsCSV}${params.emojiCSV}"\n`;
+    const csv = `"${params.mode}","${params.order}"${params.wordsCSV}${params.emojiCSV}`;
     Utility.postCSV(csv);
     const page = document.getElementById("goodbye-page");
     Utility.fadeIn(page);
