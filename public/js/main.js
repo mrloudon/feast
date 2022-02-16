@@ -78,7 +78,7 @@ function doEmojiPage(callback) {
             return;
         }
         if (validKeys[evt.keyCode]) {
-            endTrial("F", evt.timeStamp - startTime, validKeys[evt.keyCode]);
+            endTrial("F", Date.now() - startTime, validKeys[evt.keyCode]);
         }
     }
 
