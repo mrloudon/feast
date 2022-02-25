@@ -1,4 +1,4 @@
-import * as Utility from "./utility.mjs";
+import * as Utility from "./utility.js";
 
 const tasks = [doIntroPage, doBlock1, doInterBlockPage, doBlock2, doGoodbyePage];
 /* const emojiFiles = ["emoji/Angry face.svg", "emoji/Anguished face.svg", "emoji/Astonished face.svg", "emoji/Cold face.svg", "emoji/Face screaming in fear.svg",
