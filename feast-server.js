@@ -25,7 +25,7 @@ app.post(["/submit", "/feast/submit"], (req, resp) => {
         /* fs.stat(OUTPUT_FILE, function (err, stat) {
             if (err === null) {
                 fs.appendFile(OUTPUT_FILE, csv, () => { });
-            }
+            }q
             else {
                 constructCSVHeader();
                 //console.log(CSV_HEADER);

@@ -8,15 +8,15 @@
 
 .page-content {
     display: none;
-    min-height: 600px;
+    min-height: 500px;
     /* border: solid 1px #eee;
     padding: 1ex; */
 }
 
 .container {
-    background-color: #fafafa;
+    background-color: #fefefe;
     border: solid 1px #eee;
-    max-width: 1000px;
+    max-width: 1100px;
 }
 
 .jumbotron {

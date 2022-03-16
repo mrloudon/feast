@@ -1,0 +1,19 @@
+
+.emoji-scale-div {
+    height: 95px;
+    width: 900px;
+    margin: 0 auto;
+}
+
+.emoji-scale-item {
+    border: solid 1px #fefefe;
+    border-radius: 5px;
+}
+
+.text-scale-item {
+    margin: 0 4px
+}
+
+img {
+    margin-top: 15px;
+}
