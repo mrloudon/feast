@@ -1,7 +1,7 @@
 
 .emoji-scale-div {
     height: 95px;
-    width: 900px;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -30,4 +30,9 @@
     border-right: 25px solid transparent;
     border-top: 55px solid #ffca2c;
     visibility: hidden;
+  }
+
+  /* canvas-container created bu fabric.js */
+  .canvas-container {
+      margin: 0 auto;
   }
