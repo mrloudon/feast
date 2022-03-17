@@ -33,10 +33,13 @@ function doScalePage(){
     const title = page.querySelector("h1");
     const emojiScaleDiv = page.querySelector(".emoji-scale-div");
     const textScaleDiv = page.querySelector(".text-scale-div");
+    const textPointerDiv = page.querySelector(".text-pointer-div");
     let emojiScaleItems;
     let emojiScaleHTML = "";
     let textScaleItems;
     let textScaleHTML = "";
+    let pointerHTML = "";
+    let pointerScaleItems;
     let i = 0;
 
     function emojiItemClick(evt){
@@ -62,6 +65,8 @@ function doScalePage(){
         });
         item.classList.remove("btn-primary");
         item.classList.add("btn-warning");
+        pointerScaleItems.forEach(item => item.style.visibility = "hidden");
+        pointerScaleItems[id].style.visibility = "visible";
         title.innerHTML = id;
     }
 
@@ -72,19 +77,25 @@ function doScalePage(){
             </div>
         `;
         const btnHTML = `<button type="button" class="col btn btn-primary text-scale-item" data-id="${i}">${textNames[i]}</button>`;
+        const triangleHTML = `<div class="col">
+                                <div class="triangle-down"></div>
+                            </div>`;
         emojiScaleHTML += imgHTML;
         textScaleHTML += btnHTML;
+        pointerHTML += triangleHTML;
         i++;
     });
     emojiScaleDiv.innerHTML = emojiScaleHTML;
     textScaleDiv.innerHTML = textScaleHTML;
+    textPointerDiv.innerHTML = pointerHTML;
 
     emojiScaleItems = page.querySelectorAll(".emoji-scale-item");
     emojiScaleItems.forEach(item => item.addEventListener("click", emojiItemClick));
 
     textScaleItems = page.querySelectorAll(".text-scale-item");
-    console.log(textScaleItems);
     textScaleItems.forEach(item => item.addEventListener("click", textItemClick));
+
+    pointerScaleItems = page.querySelectorAll(".triangle-down");
 
     Utility.fadeIn(page);
 }

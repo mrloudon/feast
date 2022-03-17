@@ -14,6 +14,20 @@
     margin: 0 4px
 }
 
-img {
+.text-pointer-div {
+    border-bottom: solid 3px #666;
+}
+
+.emoji-scale-div img {
     margin-top: 15px;
 }
+
+.triangle-down {
+    width: 25px;
+    height: 0;
+    margin: 0 auto;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-top: 55px solid #ffca2c;
+    visibility: hidden;
+  }
