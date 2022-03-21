@@ -181,10 +181,10 @@ function doScalePage(callback) {
 
         const pointer = new fabric.Triangle({
             width: 40,
-            height: 40,
+            height: 30,
             fill: "#ffca2c",
             left: 50,
-            top: 160,
+            top: 150,
             angle: 180,
             lockMovementX: true,
             lockMovementY: true,
@@ -222,11 +222,11 @@ function doScalePage(callback) {
                 canvas.add(text);
 
                 const tick = new fabric.Rect({
-                    left: pointerX - 24,
-                    top: 160,
+                    left: pointerX - 28,
+                    top: 150,
                     fill: "#666",
-                    width: 10,
-                    height: 25,
+                    width: 15,
+                    height: 35,
                     lockMovementX: true,
                     lockMovementY: true,
                     lockScalingX: true,
