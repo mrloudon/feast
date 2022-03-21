@@ -32,12 +32,36 @@
 
                     <div class="col input-group">
                         <span class="input-group-text">Participant ID</span>
-                        <input type="number" min="1" max="999" autofocus>
+                        <input type="number" min="1" max="10" autofocus>
                     </div>
                     <div class="col">
 
                     </div>
                 </div>
+                <table class="table my-5">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">P1A</th>
+                        <th scope="col">P2A</th>
+                        <th scope="col">P3A</th>
+                        <th scope="col">P1B</th>
+                        <th scope="col">P2B</th>
+                        <th scope="col">P3B</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row" class="id-th">&mdash;</th>
+                        <td>&mdash;</td>
+                        <td>&mdash;</td>
+                        <td>&mdash;</td>
+                        <td>&mdash;</td>
+                        <td>&mdash;</td>
+                        <td>&mdash;</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 <div class="my-4 text-center">
                     <button type="button" class="btn btn-primary next-btn">Next</button>
                 </div>
@@ -60,10 +84,11 @@
             <div>
                 <ul class="list-group">
                     <li class="list-group-item">1. First, cleanse your palate with a bite of cracker and water.</li>
-                    <li class="list-group-item">2. Please taste the <span class="fw-bold text-decoration-underline">whole
-                            volume</span> of sample <span class="fw-bold">xxx</span> in one sip and select the phrase
+                    <li class="list-group-item">2. Please taste the <span
+                            class="fw-bold text-decoration-underline">whole
+                            volume</span> of sample <span class="fw-bold code-span">xxx</span> in one sip and select the phrase
                         that best represents your level of liking for the sample on the scale below. </li>
-                    <li class="list-group-item">3. To record your response, touch the appropriate place on the scale.
+                    <li class="list-group-item">3. To record your response, touch the appropriate label on the scale.
                 </ul>
                 <div class="mt-5">
                     <canvas width="1010" height="200" class="text-canvas" id="c"></canvas>
@@ -91,12 +116,21 @@
                         appear.</li>
                     <li class="list-group-item">There are no right or wrong answers, just how the product made you feel
                         tasting it. Go with your first impression.</li>
-                    <li class="list-group-item">5. Press <strong>Next</strong> once you have read and understood these
+                    <li class="list-group-item">Press <strong>Next</strong> once you have read and understood these
                         instructions.</li>
                 </ol>
                 <div class="text-center my-5">
                     <button type="button" class="btn btn-primary next-btn btn-lg">Next</button>
                 </div>
+            </div>
+        </div>
+        <!----------------------------------------------------------------------------------------------------->
+        <div class="page-content" id="instructions-2-page">
+            <div class="py-5">
+                <p class="py-5 text-center">
+                    Taste the <span class="fw-bold text-decoration-underline">whole volume</span> of sample <span class="fw-bold code-span">xxx</span> in one
+                    sip when you are ready and immediately press the space bar to reveal the emotions.
+                </p>
             </div>
         </div>
         <!----------------------------------------------------------------------------------------------------->
@@ -113,8 +147,22 @@
         </div>
         <!----------------------------------------------------------------------------------------------------->
         <div class="page-content" id="inter-block-page">
-            <div class="m-5 text-center">
-                <h1 class="display-6 my-5">Block Completed</h1>
+            <div class="m-5">
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item">Now cleanse your palate with a bite of cracker and water.</li>
+                    <li class="list-group-item">Press <strong>Next</strong> to continue.</li>
+                </ol>
+            </div>
+            <div class="my-5 text-center">
+                <button type="button" class="btn btn-primary next-btn">Next</button>
+            </div>
+        </div>
+        <!----------------------------------------------------------------------------------------------------->
+        <div class="page-content" id="countdown-page">
+            <div class="m-5">
+                <div class="alert alert-info m-5 text-center">
+                    <h1 class="display-1 font-monospace"></h1>
+                </div>
             </div>
             <div class="my-5 text-center">
                 <button type="button" class="btn btn-primary next-btn">Next</button>

@@ -1,0 +1,22 @@
+const participants = [
+    { id: '1', product: '1', part1: '356', part2: '102', part3: '947' },
+    { id: '1', product: '2', part1: '825', part2: '491', part3: '270' },
+    { id: '2', product: '2', part1: '825', part2: '491', part3: '270' },
+    { id: '2', product: '1', part1: '356', part2: '102', part3: '947' },
+    { id: '3', product: '1', part1: '356', part2: '102', part3: '947' },
+    { id: '3', product: '2', part1: '825', part2: '491', part3: '270' },
+    { id: '4', product: '2', part1: '825', part2: '491', part3: '270' },
+    { id: '4', product: '1', part1: '356', part2: '102', part3: '947' },
+    { id: '5', product: '1', part1: '356', part2: '102', part3: '947' },
+    { id: '5', product: '2', part1: '825', part2: '491', part3: '270' },
+    { id: '6', product: '2', part1: '825', part2: '491', part3: '270' },
+    { id: '6', product: '1', part1: '356', part2: '102', part3: '947' },
+    { id: '7', product: '1', part1: '356', part2: '102', part3: '947' },
+    { id: '7', product: '2', part1: '825', part2: '491', part3: '270' },
+    { id: '8', product: '2', part1: '825', part2: '491', part3: '270' },
+    { id: '8', product: '1', part1: '356', part2: '102', part3: '947' },
+    { id: '9', product: '1', part1: '356', part2: '102', part3: '947' },
+    { id: '9', product: '2', part1: '825', part2: '491', part3: '270' },
+    { id: '10', product: '2', part1: '825', part2: '491', part3: '270' },
+    { id: '10', product: '1', part1: '356', part2: '102', part3: '947' }
+];

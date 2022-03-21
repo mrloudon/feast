@@ -2,15 +2,36 @@
 
 import * as Utility from "./utility.js";
 
-const tasks = [doInstructions1Page, doScalePage, doWelcomePage, doIntroPage, doWordsPage, doInterBlockPage, doGoodbyePage];
+const participants = [
+    { id: "1", codes: ["356", "102", "947", "825", "491", "270"] },
+    { id: "2", codes: ["825", "491", "270", "356", "102", "947"] },
+    { id: "3", codes: ["356", "102", "947", "825", "491", "270"] },
+    { id: "4", codes: ["825", "491", "270", "356", "102", "947"] },
+    { id: "5", codes: ["356", "102", "947", "825", "491", "270"] },
+    { id: "6", codes: ["825", "491", "270", "356", "102", "947"] },
+    { id: "7", codes: ["356", "102", "947", "825", "491", "270"] },
+    { id: "8", codes: ["825", "491", "270", "356", "102", "947"] },
+    { id: "9", codes: ["356", "102", "947", "825", "491", "270"] },
+    { id: "10", codes: ["825", "491", "270", "356", "102", "947"] }
+];
 
-const words = ["Happy", "Sad", "Disgust", "Anger", "Fear", "Love", "Hate"];
+const tasks = [prepareDelay2Min, doCountdownPage, doIntroPage, doWelcomePage, doScalePage,
+    doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
+    doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
+    doGoodbyePage];
+
+//const words = ["Satisfied", "Comforted", "Happy", "Indulgent", "Pleasant", "Nostalgic", "Bored", "Disappointed", "Disgusted", "Relaxed", "Uncomfortable", "Delight"];
+const words = ["Satisfied", "Comforted", "Happy", "Indulgent", "Pleasant"];
+
 const params = {
-    mode: "",
+    mode: "mode-2",
     order: "",
     emojiCSV: "",
-    wordsCSV: ""
+    wordsCSV: "",
+    participant: null,
+    state: 0
 };
+
 
 function doWordsPage(callback) {
     const ITI = 500;
@@ -92,12 +113,19 @@ function doWordsPage(callback) {
 
     Utility.fadeIn(page)
         .then(doTrial);
+
+    console.log(words);
+    Utility.shuffleArray(words);
+    console.log(words);
+
 }
 
 function doIntroPage(callback) {
     const page = document.getElementById("landing-page");
     const input = page.querySelector("input");
     const nextBtn = page.querySelector("button.next-btn");
+    const tds = page.querySelectorAll("td");
+    const idTh = page.querySelector(".id-th");
 
     function nextBtnClick() {
         nextBtn.removeEventListener("click", nextBtnClick);
@@ -109,9 +137,16 @@ function doIntroPage(callback) {
     function inputChange() {
         const id = parseInt(input.value, 10);
         if (typeof id === "number" && id > 0 && id < 1000) {
+            idTh.innerHTML = id;
+            params.participant = participants.find(p => p.id === id.toString());
+            for (let i = 0; i < tds.length; i++) {
+                tds[i].innerHTML = params.participant.codes[i];
+            }
             nextBtn.disabled = false;
         }
         else {
+            idTh.innerHTML = "&mdash;";
+            tds.forEach(t => t.innerHTML = "&mdash;");
             nextBtn.disabled = true;
         }
     }
@@ -148,6 +183,7 @@ function doScalePage(callback) {
     const page = document.getElementById("scale-page");
     const nextBtn = page.querySelector("button.next-btn");
     const jumbos = document.querySelectorAll(".jumbotron");
+    const span = page.querySelector(".code-span");
 
     function doCanvasScale() {
 
@@ -205,7 +241,7 @@ function doScalePage(callback) {
                 const text = new fabric.Text(caption, {
                     left: textX,
                     top: 10,
-                    fontSize: 20,
+                    fontSize: 18,
                     fontFamily: "Arial",
                     angle: 90,
                     lockMovementX: true,
@@ -245,37 +281,37 @@ function doScalePage(callback) {
             });
         }
 
-       /*  const rect = new fabric.Rect({
-            left: 20,
-            top: 180,
-            fill: "#666",
-            width: 965,
-            height: 5,
-            lockMovementX: true,
-            lockMovementY: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockRotation: true,
-            hasControls: false,
-            hasBorders: false
-        });
-
-        const pointer = new fabric.Triangle({
-            width: 40,
-            height: 60,
-            fill: "#ffca2c",
-            left: 50,
-            top: 180,
-            angle: 180,
-            lockMovementX: true,
-            lockMovementY: true,
-            lockScalingX: true,
-            lockScalingY: true,
-            lockRotation: true,
-            hasControls: false,
-            hasBorders: false,
-            visible: false
-        }); */
+        /*  const rect = new fabric.Rect({
+             left: 20,
+             top: 180,
+             fill: "#666",
+             width: 965,
+             height: 5,
+             lockMovementX: true,
+             lockMovementY: true,
+             lockScalingX: true,
+             lockScalingY: true,
+             lockRotation: true,
+             hasControls: false,
+             hasBorders: false
+         });
+ 
+         const pointer = new fabric.Triangle({
+             width: 40,
+             height: 60,
+             fill: "#ffca2c",
+             left: 50,
+             top: 180,
+             angle: 180,
+             lockMovementX: true,
+             lockMovementY: true,
+             lockScalingX: true,
+             lockScalingY: true,
+             lockRotation: true,
+             hasControls: false,
+             hasBorders: false,
+             visible: false
+         }); */
 
         canvas.on("mouse:down", function (options) {
             if (options.target && options.target.kind && options.target.kind === "label") {
@@ -302,6 +338,8 @@ function doScalePage(callback) {
             });
     }
 
+    span.innerHTML = params.participant.codes[params.state];
+    params.state++;
     jumbos.forEach(jumbo => jumbo.style.display = "none");
     nextBtn.addEventListener("click", nextBtnClick);
     nextBtn.disabled = true;
@@ -329,6 +367,27 @@ function doInstructions1Page(callback) {
     Utility.fadeIn(page);
 }
 
+function doInstructions2Page(callback) {
+    const page = document.getElementById("instructions-2-page");
+    const span = page.querySelector(".code-span");
+
+    function keyDown(evt) {
+        if (evt.keyCode === 32) {
+            document.body.removeEventListener("keydown", keyDown);
+            evt.preventDefault();
+            evt.stopPropagation();
+            Utility.fadeOut(page)
+                .then(callback);
+            return false;
+        }
+    }
+
+    span.innerHTML = params.participant.codes[params.state];
+    params.state++;
+    document.body.addEventListener("keydown", keyDown);
+    Utility.fadeIn(page);
+}
+
 function doInterBlockPage(callback) {
     console.log("Do inter-block page");
     const page = document.getElementById("inter-block-page");
@@ -345,6 +404,41 @@ function doInterBlockPage(callback) {
     Utility.fadeIn(page);
 }
 
+function doCountdownPage(callback, result) {
+    const page = document.getElementById("countdown-page");
+    const timeHeader = page.querySelector("h1");
+    let countDown = result.countDown;
+    let countDownIntervalTimer;
+
+    function getCountDownString() {
+        let mins = (Math.floor(countDown / 60)).toString();
+        let secs = (countDown % 60).toString();
+        if (secs.length < 2) {
+            secs = `0${secs}`;
+        }
+        return `${mins}:${secs}`;
+    }
+
+    countDownIntervalTimer = window.setInterval(() => {
+        countDown--;
+        timeHeader.innerHTML = getCountDownString();
+        if (countDown === 0) {
+            window.clearInterval(countDownIntervalTimer);
+            countDownIntervalTimer = null;
+            Utility.fadeOut(page)
+                .then(callback);
+        }
+    }, 1000);
+
+    timeHeader.innerHTML = getCountDownString();
+    Utility.fadeIn(page);
+    console.log(result);
+}
+
+function prepareDelay2Min(callback) {
+    callback(null, { countDown: 10 });
+}
+
 function doGoodbyePage() {
     console.log("Do goodbye page");
     const csv = `"${params.mode}","${params.order}"${params.wordsCSV}${params.emojiCSV}`;
@@ -352,7 +446,6 @@ function doGoodbyePage() {
     const page = document.getElementById("goodbye-page");
     Utility.fadeIn(page);
 }
-
 
 function nextTask(err, result) {
     console.log(`nextTask(${err}, ${result})`);
@@ -365,7 +458,6 @@ function nextTask(err, result) {
         task(nextTask, result);
     }
 }
-
 
 function run() {
     console.log("Running.");
