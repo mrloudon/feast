@@ -2,7 +2,7 @@
 
 import * as Utility from "./utility.js";
 
-const tasks = [doScalePage, doWelcomePage, doIntroPage, doWordsPage, doInterBlockPage, doGoodbyePage];
+const tasks = [doInstructions1Page, doScalePage, doWelcomePage, doIntroPage, doWordsPage, doInterBlockPage, doGoodbyePage];
 
 const words = ["Happy", "Sad", "Disgust", "Anger", "Fear", "Love", "Hate"];
 const params = {
@@ -181,10 +181,10 @@ function doScalePage(callback) {
 
         const pointer = new fabric.Triangle({
             width: 40,
-            height: 60,
+            height: 40,
             fill: "#ffca2c",
             left: 50,
-            top: 180,
+            top: 160,
             angle: 180,
             lockMovementX: true,
             lockMovementY: true,
@@ -306,6 +306,26 @@ function doScalePage(callback) {
     nextBtn.addEventListener("click", nextBtnClick);
     nextBtn.disabled = true;
     doCanvasScale();
+    Utility.fadeIn(page);
+}
+
+function doInstructions1Page(callback) {
+    const page = document.getElementById("instructions-1-page");
+    const nextBtn = page.querySelector("button.next-btn");
+    const jumbos = document.querySelectorAll(".jumbotron");
+
+    function nextBtnClick() {
+        nextBtn.removeEventListener("click", nextBtnClick);
+        console.log(params);
+        Utility.fadeOut(page)
+            .then(() => {
+                jumbos.forEach(jumbo => jumbo.style.display = "block");
+                callback();
+            });
+    }
+
+    //jumbos.forEach(jumbo => jumbo.style.display = "none");
+    nextBtn.addEventListener("click", nextBtnClick);
     Utility.fadeIn(page);
 }
 
