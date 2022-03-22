@@ -15,9 +15,15 @@ const participants = [
     { id: "10", codes: ["825", "491", "270", "356", "102", "947"] }
 ];
 
-const tasks = [prepareDelay2Min, doCountdownPage, doIntroPage, doWelcomePage, doScalePage,
+const tasks = [
+    doIntroPage, doWelcomePage,
+    doScalePage,
     doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
     doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
+    prepareDelay2Min, doCountdownPage,
+    doScalePage,
+    doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
+    doInstructions1Page, doInstructions2Page, doWordsPage,
     doGoodbyePage];
 
 //const words = ["Satisfied", "Comforted", "Happy", "Indulgent", "Pleasant", "Nostalgic", "Bored", "Disappointed", "Disgusted", "Relaxed", "Uncomfortable", "Delight"];
@@ -25,9 +31,11 @@ const words = ["Satisfied", "Comforted", "Happy", "Indulgent", "Pleasant"];
 
 const params = {
     mode: "mode-2",
-    order: "",
-    emojiCSV: "",
-    wordsCSV: "",
+    masterCSV: "",
+    scale1CSV: "",
+    words1CSV: "",
+    scale2CSV: "",
+    words2CSV: "",
     participant: null,
     state: 0
 };
@@ -44,10 +52,17 @@ function doWordsPage(callback) {
     let validKeys;
     let jumbotrons;
     let ignoreKeypresses = true;
+    let responses = [];
 
     function endTrial(timedOut, responseTime, response) {
         console.log(responseTime, "ms");
-        params.wordsCSV += `,"${wordSpan.innerText.toLowerCase()}","${timedOut}",${Math.round(responseTime)},"${response}"`;
+        responses.push({
+            word: wordSpan.innerText.toLowerCase(),
+            timedOut,
+            responseTime,
+            response
+        });
+        //params.wordsCSV += `,"${wordSpan.innerText.toLowerCase()}","${timedOut}",${Math.round(responseTime)},"${response}"`;
         if (timer) {
             window.clearTimeout(timer);
             timer = null;
@@ -56,6 +71,9 @@ function doWordsPage(callback) {
             doTrial();
         }
         else {
+            responses.sort((a, b) => (a.word > b.word ? 1 : -1));
+            responses.forEach(response => params.masterCSV += `,"${response.word}","${response.timedOut}",${Math.round(responseTime)},"${response.response}"`);
+            console.log(params.masterCSV);
             document.body.removeEventListener("keydown", keyDown);
             Utility.fadeOut(page)
                 .then(() => {
@@ -113,10 +131,6 @@ function doWordsPage(callback) {
 
     Utility.fadeIn(page)
         .then(doTrial);
-
-    console.log(words);
-    Utility.shuffleArray(words);
-    console.log(words);
 
 }
 
@@ -184,6 +198,7 @@ function doScalePage(callback) {
     const nextBtn = page.querySelector("button.next-btn");
     const jumbos = document.querySelectorAll(".jumbotron");
     const span = page.querySelector(".code-span");
+    let startTime, clickTime, stopTime, selection;
 
     function doCanvasScale() {
 
@@ -270,6 +285,7 @@ function doScalePage(callback) {
                     lockRotation: true,
                     hasControls: false,
                     hasBorders: false,
+                    value,
                     kind: "label",
                     pointerX: pointerX
                 });
@@ -315,7 +331,8 @@ function doScalePage(callback) {
 
         canvas.on("mouse:down", function (options) {
             if (options.target && options.target.kind && options.target.kind === "label") {
-                console.log("Click");
+                clickTime = Date.now();
+                selection = options.target.value;
                 pointer.left = options.target.pointerX;
                 pointer.visible = true;
                 nextBtn.disabled = false;
@@ -329,7 +346,9 @@ function doScalePage(callback) {
     }
 
     function nextBtnClick() {
+        stopTime = Date.now();
         nextBtn.removeEventListener("click", nextBtnClick);
+        params.masterCSV += `,${clickTime - startTime},${stopTime - startTime},${selection}`;
         console.log(params);
         Utility.fadeOut(page)
             .then(() => {
@@ -344,7 +363,8 @@ function doScalePage(callback) {
     nextBtn.addEventListener("click", nextBtnClick);
     nextBtn.disabled = true;
     doCanvasScale();
-    Utility.fadeIn(page);
+    Utility.fadeIn(page)
+        .then(() => startTime = Date.now());
 }
 
 function doInstructions1Page(callback) {
@@ -431,12 +451,16 @@ function doCountdownPage(callback, result) {
     }, 1000);
 
     timeHeader.innerHTML = getCountDownString();
+    (page.querySelector(".msg-div")).innerHTML = result.msg;
     Utility.fadeIn(page);
     console.log(result);
 }
 
 function prepareDelay2Min(callback) {
-    callback(null, { countDown: 10 });
+    callback(null, {
+        countDown: 10,
+        msg: "Now you have 2 min break. You will be able to continue with the task once the countdown on the timer is completed."
+    });
 }
 
 function doGoodbyePage() {
@@ -461,6 +485,11 @@ function nextTask(err, result) {
 
 function run() {
     console.log("Running.");
+    console.log(words);
+    Utility.shuffleArray(words);
+    console.log(words);
+    params.masterCSV += `,"${words.toString()}"`;
+
     document.body.style.overflow = "hidden";
     nextTask();
 }
