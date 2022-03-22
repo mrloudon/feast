@@ -76,6 +76,21 @@ async function postCSV(csv) {
     });
 }
 
+async function postPilotCSV(csv) {
+    const data = {
+        csv
+    };
+    const response = await fetch("/submitPilot", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    const text = await response.text();
+    console.log("Response:", text);
+}
+
 function sanatise(str, length) {
     let text = str.trim().replace(/(\r\n|\n|\r)/gm, " ").replaceAll(",", ";");
     text = text.replaceAll("\"", "'");
@@ -101,6 +116,7 @@ export {
     fadeOut,
     ready,
     postCSV,
+    postPilotCSV,
     sanatise,
     wait,
     shuffleArray

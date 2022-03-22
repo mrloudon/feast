@@ -72,7 +72,7 @@ function doWordsPage(callback) {
         }
         else {
             responses.sort((a, b) => (a.word > b.word ? 1 : -1));
-            responses.forEach(response => params.masterCSV += `,"${response.word}","${response.timedOut}",${Math.round(responseTime)},"${response.response}"`);
+            responses.forEach(response => params.masterCSV += `,"${response.timedOut}",${Math.round(response.responseTime)},"${response.response}"`);
             console.log(params.masterCSV);
             document.body.removeEventListener("keydown", keyDown);
             Utility.fadeOut(page)
@@ -143,7 +143,8 @@ function doIntroPage(callback) {
 
     function nextBtnClick() {
         nextBtn.removeEventListener("click", nextBtnClick);
-        console.log(params);
+        params.masterCSV += `"${params.participant.id}","${words.toString()}"`;
+        console.log(params.masterCSV);
         Utility.fadeOut(page)
             .then(callback);
     }
@@ -198,7 +199,7 @@ function doScalePage(callback) {
     const nextBtn = page.querySelector("button.next-btn");
     const jumbos = document.querySelectorAll(".jumbotron");
     const span = page.querySelector(".code-span");
-    let startTime, clickTime, stopTime, selection;
+    let startTime, clickTime, stopTime, selection, canvas;
 
     function doCanvasScale() {
 
@@ -213,7 +214,7 @@ function doScalePage(callback) {
             "Like\nvery much",
             "Like\nextremely"
         ];
-        const canvas = new fabric.Canvas("c");
+        canvas = new fabric.Canvas("c");
 
         const rect = new fabric.Rect({
             left: 20,
@@ -348,6 +349,7 @@ function doScalePage(callback) {
     function nextBtnClick() {
         stopTime = Date.now();
         nextBtn.removeEventListener("click", nextBtnClick);
+        canvas.dispose(); // Removes objects and event handlers http://fabricjs.com/docs/fabric.Canvas.html#dispose
         params.masterCSV += `,${clickTime - startTime},${stopTime - startTime},${selection}`;
         console.log(params);
         Utility.fadeOut(page)
@@ -465,8 +467,7 @@ function prepareDelay2Min(callback) {
 
 function doGoodbyePage() {
     console.log("Do goodbye page");
-    const csv = `"${params.mode}","${params.order}"${params.wordsCSV}${params.emojiCSV}`;
-    Utility.postCSV(csv);
+    Utility.postPilotCSV(params.masterCSV);
     const page = document.getElementById("goodbye-page");
     Utility.fadeIn(page);
 }
@@ -488,8 +489,6 @@ function run() {
     console.log(words);
     Utility.shuffleArray(words);
     console.log(words);
-    params.masterCSV += `,"${words.toString()}"`;
-
     document.body.style.overflow = "hidden";
     nextTask();
 }
