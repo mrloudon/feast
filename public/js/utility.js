@@ -89,6 +89,7 @@ async function postPilotCSV(csv) {
     });
     const text = await response.text();
     console.log("Response:", text);
+    return text;
 }
 
 function sanatise(str, length) {

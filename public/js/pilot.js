@@ -470,19 +470,21 @@ function prepareDelay2Min(callback) {
     });
 }
 
-function doGoodbyePage() {
+async function doGoodbyePage() {
     console.log("Do goodbye page");
-    Utility.postPilotCSV(params.masterCSV);
+   
     const page = document.getElementById("goodbye-page");
     const logo = document.querySelector(".feast-footer-logo");
+    const serverFeedback = document.querySelector(".server-feedback");
 
     function logoTap(){
         logo.removeEventListener("click", logoTap);
         window.location.reload();
     }
-
+    
     logo.addEventListener("click", logoTap);
     Utility.fadeIn(page);
+    serverFeedback.innerHTML = await Utility.postPilotCSV(params.masterCSV);
 }
 
 function nextTask(err, result) {
