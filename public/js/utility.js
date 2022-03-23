@@ -64,7 +64,7 @@ async function postCSV(csv) {
     const data = {
         csv
     };
-    fetch("/submit", {
+    fetch("feast/submit", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -80,7 +80,7 @@ async function postPilotCSV(csv) {
     const data = {
         csv
     };
-    const response = await fetch("/submitPilot", {
+    const response = await fetch("feast/submitPilot", {
         method: "POST",
         body: JSON.stringify(data),
         headers: {

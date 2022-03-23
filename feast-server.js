@@ -35,7 +35,6 @@ app.disable("x-powered-by");
 app.use(express.static("public"));
 
 app.get('/hi', (req, res) => {
-    console.log(constructPilotCSVHeader());
     res.send('Hello World!');
 })
 
@@ -73,7 +72,11 @@ app.post(["/submitPilot", "/feast/submitPilot"], (req, resp) => {
     function writeCSV(csv) {
         fs.stat(PILOT_OUTPUT_FILE, function (err) {
             if (err === null) {
-                fs.appendFile(PILOT_OUTPUT_FILE, csv, () => { });
+                fs.appendFile(PILOT_OUTPUT_FILE, csv, (err) => { 
+                    if(err){
+                        console.log("Error writing csv:", err);
+                    }
+                });
             }
             else {
                 const csvHeader = constructPilotCSVHeader();
@@ -92,5 +95,5 @@ app.post(["/submitPilot", "/feast/submitPilot"], (req, resp) => {
 });
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+    console.log(`Feast server listening locally at http://localhost:${port}`)
 });
