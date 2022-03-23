@@ -40,6 +40,11 @@ const params = {
     state: 0
 };
 
+const bodyKeys = {
+    keyX: false,
+    shiftLeft: false
+};
+
 
 function doWordsPage(callback) {
     const ITI = 500;
@@ -151,7 +156,7 @@ function doIntroPage(callback) {
 
     function inputChange() {
         const id = parseInt(input.value, 10);
-        if (typeof id === "number" && id > 0 && id < 1000) {
+        if (typeof id === "number" && id > 0 && id < 11) {
             idTh.innerHTML = id;
             params.participant = participants.find(p => p.id === id.toString());
             for (let i = 0; i < tds.length; i++) {
@@ -498,6 +503,25 @@ function run() {
     Utility.shuffleArray(words);
     console.log(words);
     document.body.style.overflow = "hidden";
+    document.body.addEventListener("keydown", evt => {
+        if(evt.code === "KeyX"){
+            bodyKeys.keyX = true;
+        }
+        if(evt.code === "ShiftLeft"){
+            bodyKeys.shiftLeft = true;
+        }
+        if(bodyKeys.keyX && bodyKeys.shiftLeft){
+            window.location.reload();
+        }
+    });
+    document.body.addEventListener("keyup", evt => {
+        if(evt.code === "ShiftLeft"){
+            bodyKeys.shiftLeft = false;
+        }
+        if(evt.code === "KeyX"){
+            bodyKeys.keyX = false;
+        }
+    });
     nextTask();
 }
 
