@@ -469,6 +469,14 @@ function doGoodbyePage() {
     console.log("Do goodbye page");
     Utility.postPilotCSV(params.masterCSV);
     const page = document.getElementById("goodbye-page");
+    const logo = document.querySelector(".feast-footer-logo");
+
+    function logoTap(){
+        logo.removeEventListener("click", logoTap);
+        window.location.reload();
+    }
+
+    logo.addEventListener("click", logoTap);
     Utility.fadeIn(page);
 }
 
