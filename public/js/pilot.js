@@ -17,11 +17,11 @@ const participants = [
 
 const tasks = [
     doIntroPage, doWelcomePage,
-    doScalePage,
+    doButtonScalePage,
     doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
     doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
     prepareDelay2Min, doCountdownPage,
-    doScalePage,
+    doButtonScalePage,
     doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
     doInstructions1Page, doInstructions2Page, doWordsPage,
     doGoodbyePage];
@@ -199,7 +199,83 @@ function doWelcomePage(callback) {
     Utility.fadeIn(page);
 }
 
-function doScalePage(callback) {
+function doButtonScalePage(callback) {
+    const page = document.getElementById("scale-page");
+    const nextBtn = page.querySelector("button.next-btn");
+    const jumbos = document.querySelectorAll(".jumbotron");
+    const span = page.querySelector(".code-span");
+    let startTime, clickTime, stopTime, selection;
+
+    const buttonScale = {
+
+        textItemClick: function (evt) {
+            clickTime = Date.now();
+            let item = evt.currentTarget;
+            selection = item.dataset.id;
+            buttonScale.textScaleItems.forEach(item => {
+                item.classList.remove("btn-warning");
+                item.classList.add("btn-primary");
+            });
+            item.classList.remove("btn-primary");
+            item.classList.add("btn-warning");
+            nextBtn.disabled = false;
+        },
+
+        create: function () {
+            const textScaleDiv1 = page.querySelector(".text-scale-div-1");
+            const textNamesHTML = [
+                "Dislike<br>extremely",
+                "Dislike<br>very much",
+                "Dislike<br>moderately",
+                "Dislike<br>slightly",
+                "Neither like<br>nor dislike",
+                "Like<br>slightly",
+                "Like<br>moderately",
+                "Like<br>very much",
+                "Like<br>extremely"
+            ];
+            let textScaleHTML = "";
+            let i = 0;
+
+            textNamesHTML.forEach(captionHTML => {
+                const btnHTML = `<button type="button" class="col btn btn-primary text-scale-item" data-id="${i}">${captionHTML}</button>`;
+                textScaleHTML += btnHTML;
+                i++;
+            });
+            textScaleDiv1.innerHTML = textScaleHTML;
+            this.textScaleItems = page.querySelectorAll(".text-scale-div-1 .text-scale-item");
+            this.textScaleItems.forEach(item => item.addEventListener("click", this.textItemClick));
+        },
+
+        destroy: function () {
+            this.textScaleItems.forEach(item => item.removeEventListener("click", this.textItemClick));
+        }
+    };
+
+    function nextBtnClick() {
+        stopTime = Date.now();
+        nextBtn.removeEventListener("click", nextBtnClick);
+        params.masterCSV += `,${clickTime - startTime},${stopTime - startTime},${selection}`;
+        console.log(params.masterCSV);
+        Utility.fadeOut(page)
+            .then(() => {
+                jumbos.forEach(jumbo => jumbo.style.display = "block");
+                callback();
+            });
+    }
+
+    span.innerHTML = params.participant.codes[params.state];
+    params.state++;
+    jumbos.forEach(jumbo => jumbo.style.display = "none");
+    nextBtn.addEventListener("click", nextBtnClick);
+    nextBtn.disabled = true;
+    buttonScale.create();
+    Utility.fadeIn(page)
+        .then(() => startTime = Date.now());
+}
+
+// eslint-disable-next-line no-unused-vars
+function doCanvasScalePage(callback) {
     const page = document.getElementById("scale-page");
     const nextBtn = page.querySelector("button.next-btn");
     const jumbos = document.querySelectorAll(".jumbotron");
@@ -472,16 +548,16 @@ function prepareDelay2Min(callback) {
 
 async function doGoodbyePage() {
     console.log("Do goodbye page");
-   
+
     const page = document.getElementById("goodbye-page");
     const logo = document.querySelector(".feast-footer-logo");
     const serverFeedback = document.querySelector(".server-feedback");
 
-    function logoTap(){
+    function logoTap() {
         logo.removeEventListener("click", logoTap);
         window.location.reload();
     }
-    
+
     logo.addEventListener("click", logoTap);
     Utility.fadeIn(page);
     serverFeedback.innerHTML = await Utility.postPilotCSV(params.masterCSV);
@@ -506,21 +582,21 @@ function run() {
     console.log(words);
     document.body.style.overflow = "hidden";
     document.body.addEventListener("keydown", evt => {
-        if(evt.code === "KeyX"){
+        if (evt.code === "KeyX") {
             bodyKeys.keyX = true;
         }
-        if(evt.code === "ShiftLeft"){
+        if (evt.code === "ShiftLeft") {
             bodyKeys.shiftLeft = true;
         }
-        if(bodyKeys.keyX && bodyKeys.shiftLeft){
+        if (bodyKeys.keyX && bodyKeys.shiftLeft) {
             window.location.reload();
         }
     });
     document.body.addEventListener("keyup", evt => {
-        if(evt.code === "ShiftLeft"){
+        if (evt.code === "ShiftLeft") {
             bodyKeys.shiftLeft = false;
         }
-        if(evt.code === "KeyX"){
+        if (evt.code === "KeyX") {
             bodyKeys.keyX = false;
         }
     });
