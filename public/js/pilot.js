@@ -3,8 +3,8 @@
 import * as Utility from "./utility.js";
 
 const participants = [
-    { id: "1", codes: ["356", "102", "947", "825", "491", "270"] },
-    { id: "2", codes: ["825", "491", "270", "356", "102", "947"] },
+    { id: "1", codes: ["356", "102", "947", "825", "491", "270", "728", "599", "647"] },
+    /* { id: "2", codes: ["825", "491", "270", "356", "102", "947"] },
     { id: "3", codes: ["356", "102", "947", "825", "491", "270"] },
     { id: "4", codes: ["825", "491", "270", "356", "102", "947"] },
     { id: "5", codes: ["356", "102", "947", "825", "491", "270"] },
@@ -12,7 +12,7 @@ const participants = [
     { id: "7", codes: ["356", "102", "947", "825", "491", "270"] },
     { id: "8", codes: ["825", "491", "270", "356", "102", "947"] },
     { id: "9", codes: ["356", "102", "947", "825", "491", "270"] },
-    { id: "10", codes: ["825", "491", "270", "356", "102", "947"] }
+    { id: "10", codes: ["825", "491", "270", "356", "102", "947"] } */
 ];
 
 const tasks = [
@@ -20,6 +20,10 @@ const tasks = [
     doButtonScalePage,
     doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
     doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
+    prepareDelay2Min, doCountdownPage,
+    doButtonScalePage,
+    doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
+    doInstructions1Page, doInstructions2Page, doWordsPage,
     prepareDelay2Min, doCountdownPage,
     doButtonScalePage,
     doInstructions1Page, doInstructions2Page, doWordsPage, doInterBlockPage,
@@ -32,10 +36,10 @@ const words = ["Satisfied", "Comforted", "Happy", "Indulgent", "Pleasant"];
 const params = {
     mode: "mode-2",
     masterCSV: "",
-    scale1CSV: "",
+    /* scale1CSV: "",
     words1CSV: "",
     scale2CSV: "",
-    words2CSV: "",
+    words2CSV: "", */
     participant: null,
     state: 0
 };
@@ -156,7 +160,7 @@ function doIntroPage(callback) {
 
     function inputChange() {
         const id = parseInt(input.value, 10);
-        if (typeof id === "number" && id > 0 && id < 11) {
+        if (typeof id === "number" && id > 0 && id < 2) {
             idTh.innerHTML = id;
             params.participant = participants.find(p => p.id === id.toString());
             for (let i = 0; i < tds.length; i++) {

@@ -26,6 +26,7 @@ function constructPilotCSVHeader() {
 
     makeBlock("A");
     makeBlock("B");
+    makeBlock("C");
     headerCSV += "\n";
     return headerCSV;
 }
