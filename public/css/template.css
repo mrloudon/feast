@@ -8,7 +8,7 @@
 
 .page-content {
     display: none;
-    min-height: 400px;
+    min-height: 550px;
     /* border: solid 1px #eee;
     padding: 1ex; */
 }
@@ -26,6 +26,7 @@
     background-color: rgb(0, 75, 142);
     font-family: 'NimbusSanNovCon-med', sans-serif;
     min-height: 50px;
+    border-radius: 10px;
 }
 
 .jumbotron h4 {
