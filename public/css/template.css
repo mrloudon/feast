@@ -8,7 +8,7 @@
 
 .page-content {
     display: none;
-    min-height: 550px;
+    min-height: 400px;
     /* border: solid 1px #eee;
     padding: 1ex; */
 }
@@ -25,7 +25,7 @@
     color: white;
     background-color: rgb(0, 75, 142);
     font-family: 'NimbusSanNovCon-med', sans-serif;
-    min-height: 50px;
+    min-height: 40px;
     border-radius: 10px;
 }
 
