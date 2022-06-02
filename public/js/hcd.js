@@ -52,7 +52,20 @@ function doPracticeInstructions1Page(callback) {
 
 function doPracticeInstructions2Page(callback) {
     const page = document.getElementById("practice-instructions-2-page");
-   
+    
+    function keyDown(evt) {
+        if (evt.keyCode === 32) {
+            document.body.removeEventListener("keydown", keyDown);
+            evt.preventDefault();
+            evt.stopPropagation();
+            Utility.fadeOut(page)
+                .then(callback);
+            return false;
+        }
+    }
+
+    hideJumbos();
+    document.body.addEventListener("keydown", keyDown);
     Utility.fadeIn(page);
 }
 

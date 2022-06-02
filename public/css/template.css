@@ -30,15 +30,14 @@
 }
 
 .jumbotron h4 {
-    margin-top: 0.5ex;
+    padding-top: 0.5ex;
 }
 
 .english {
     font-family: 'NimbusSanNovCon-med', sans-serif;
-    margin-top: 1ex;
     font-size: 2ex;
     color: white;
-    
+    margin-top: 1ex;
 }
 
 .te-reo {
@@ -49,7 +48,7 @@
 
 .footer-logo {
     float: right;
-    margin-top: 0.5ex;
+    padding-top: 0.5ex;
 }
 
 .english a {
