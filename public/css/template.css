@@ -14,8 +14,8 @@
 }
 
 .container {
-    background-color: #fefefe;
-    border: solid 1px #eee;
+  /*   background-color: #fefefe;
+    border: solid 1px #eee; */
     max-width: 1100px;
 }
 
