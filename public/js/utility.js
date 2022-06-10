@@ -112,6 +112,14 @@ function shuffleArray(array) {
     }
 }
 
+function hideJumbos() {
+    document.querySelectorAll(".jumbotron").forEach(jumbo => jumbo.style.display = "none");
+}
+
+function showJumbos() {
+    document.querySelectorAll(".jumbotron").forEach(jumbo => jumbo.style.display = "block");
+}
+
 export {
     fadeIn,
     fadeOut,
@@ -120,5 +128,7 @@ export {
     postPilotCSV,
     sanatise,
     wait,
-    shuffleArray
+    shuffleArray,
+    hideJumbos,
+    showJumbos
 };
