@@ -1,15 +1,17 @@
 import * as Utility from "./utility.js";
 import * as Calibration from "./calibration.js";
 import * as FalsePositives from "./falsePositive.js";
+import * as LikingScale from "./likingScale.js";
+import * as Intension from "./intension.js";
 
-const tasks = [FalsePositives.doFalsePositiveTask, Calibration.doCalibrationTask, doWelcomePage];
+const tasks = [Intension.doIntensionTask, doLikingScalePage, doPracticeCompletedPage, FalsePositives.doFalsePositiveTask, Calibration.doCalibrationTask, doWelcomePage];
 
 const bodyKeys = {
     keyX: false,
     shiftLeft: false
 };
 
-function doWelcomePage(callback) {
+function doWelcomePage() {
     const page = document.getElementById("welcome-page");
     const nextBtn = page.querySelector("button.next-btn");
 
@@ -19,12 +21,48 @@ function doWelcomePage(callback) {
         Utility.fadeOut(page)
             .then(() => {
                 Utility.showJumbos();
-                callback();
+                nextTask();
             });
     }
 
     Utility.hideJumbos();
     nextBtn.addEventListener("click", nextBtnClick);
+    Utility.fadeIn(page);
+}
+
+function doPracticeCompletedPage(){
+    const page = document.getElementById("practice-completed-1-page");
+    const nextBtn = page.querySelector(".next-btn");
+
+    function nextBtnClick(){
+        nextBtn.removeEventListener("click", nextBtnClick);
+        Utility.fadeOut(page)
+            .then(nextTask);
+    }
+
+    nextBtn.addEventListener("click", nextBtnClick);
+    Utility.fadeIn(page);
+}
+
+function doLikingScalePage(){
+
+    const page = document.getElementById("liking-scale-page");
+    const nextBtn = page.querySelector(".next-btn");
+
+    function callback(value){
+        nextBtn.disabled = false;
+        console.log(value);
+    }
+
+    function nextBtnClick(){
+        nextBtn.removeEventListener("click", nextBtnClick);
+        Utility.fadeOut(page)
+            .then(nextTask);
+    }
+
+    nextBtn.disabled = true;
+    nextBtn.addEventListener("click", nextBtnClick);
+    LikingScale.doLikingScalePage(page, callback);
     Utility.fadeIn(page);
 }
 
