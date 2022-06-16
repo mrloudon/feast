@@ -3,8 +3,9 @@ import * as Calibration from "./calibration.js";
 import * as FalsePositives from "./falsePositive.js";
 import * as LikingScale from "./likingScale.js";
 import * as Intension from "./intension.js";
+import * as Cata from "./cata.js";
 
-const tasks = [Intension.doIntensionTask, doLikingScalePage, doPracticeCompletedPage, FalsePositives.doFalsePositiveTask, Calibration.doCalibrationTask, doWelcomePage];
+const tasks = [doCataTask, Intension.doIntensionTask, doLikingScalePage, doPracticeCompletedPage, FalsePositives.doFalsePositiveTask, Calibration.doCalibrationTask, doWelcomePage];
 
 const bodyKeys = {
     keyX: false,
@@ -30,11 +31,11 @@ function doWelcomePage() {
     Utility.fadeIn(page);
 }
 
-function doPracticeCompletedPage(){
+function doPracticeCompletedPage() {
     const page = document.getElementById("practice-completed-1-page");
     const nextBtn = page.querySelector(".next-btn");
 
-    function nextBtnClick(){
+    function nextBtnClick() {
         nextBtn.removeEventListener("click", nextBtnClick);
         Utility.fadeOut(page)
             .then(nextTask);
@@ -44,17 +45,17 @@ function doPracticeCompletedPage(){
     Utility.fadeIn(page);
 }
 
-function doLikingScalePage(){
+function doLikingScalePage() {
 
     const page = document.getElementById("liking-scale-page");
     const nextBtn = page.querySelector(".next-btn");
 
-    function callback(value){
+    function callback(value) {
         nextBtn.disabled = false;
         console.log(value);
     }
 
-    function nextBtnClick(){
+    function nextBtnClick() {
         nextBtn.removeEventListener("click", nextBtnClick);
         Utility.fadeOut(page)
             .then(nextTask);
@@ -64,6 +65,10 @@ function doLikingScalePage(){
     nextBtn.addEventListener("click", nextBtnClick);
     LikingScale.doLikingScalePage(page, callback);
     Utility.fadeIn(page);
+}
+
+function doCataTask(){
+    Cata.doCataTask(1, 235, nextTask);
 }
 
 function nextTask(err, result) {
@@ -78,7 +83,7 @@ function nextTask(err, result) {
     }
 }
 
-function run() {
+async function run() {
     console.log("Running.");
     document.body.style.overflow = "hidden";
     document.body.addEventListener("keydown", evt => {
@@ -100,6 +105,7 @@ function run() {
             bodyKeys.keyX = false;
         }
     });
+
     nextTask();
 }
 

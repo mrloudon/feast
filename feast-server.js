@@ -2,12 +2,15 @@
 
 const express = require("express");
 const fs = require("fs");
+const events = require("events");
+const readline = require("readline");
 
 const PILOT_OUTPUT_FILE = "./public/A3rgYo56weW.csv";
 const DEMO_OUTPUT_FILE = "./public/ChSgHo1TwE.csv";
 
 const app = express();
 const port = 8010
+let cataData;
 
 function constructPilotCSVHeader() {
     //const words = ["Satisfied", "Comforted", "Happy", "Indulgent", "Pleasant", "Nostalgic", "Bored", "Disappointed", "Disgusted", "Relaxed", "Uncomfortable", "Delight"];
@@ -31,12 +34,52 @@ function constructPilotCSVHeader() {
     return headerCSV;
 }
 
+function readCataData() {
+    const cataData = [];
+    let first = true;
+    let arr;
+
+    return new Promise(function (resolve, reject) {
+
+        try {
+            const rl = readline.createInterface({
+                input: fs.createReadStream("CATAdesign.csv"),
+                crlfDelay: Infinity
+            });
+
+            rl.on("line", (line) => {
+                const item = {};
+                if (first) {
+                    first = false;
+                }
+                else {
+                    arr = line.split(",");
+                    item.subject = arr[0];
+                    item.cata = arr.splice(1);
+                    cataData.push(item);
+                }
+            });
+
+            events.once(rl, "close")
+                .then(() => {
+                    resolve(cataData);
+                });
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
 app.use(express.json());
 app.disable("x-powered-by");
 app.use(express.static("public"));
 
-app.get('/hi', (req, res) => {
+app.get("/hi", (req, res) => {
     res.send('Hello World!');
+})
+
+app.get("/cata", (req, resp) => {
+    resp.send(cataData);
 })
 
 app.post(["/submit", "/feast/submit"], (req, resp) => {
@@ -73,8 +116,8 @@ app.post(["/submitPilot", "/feast/submitPilot"], (req, resp) => {
     function writeCSV(csv) {
         fs.stat(PILOT_OUTPUT_FILE, function (err) {
             if (err === null) {
-                fs.appendFile(PILOT_OUTPUT_FILE, csv, (err) => { 
-                    if(err){
+                fs.appendFile(PILOT_OUTPUT_FILE, csv, (err) => {
+                    if (err) {
                         console.log("Error writing csv:", err);
                     }
                 });
@@ -95,6 +138,15 @@ app.post(["/submitPilot", "/feast/submitPilot"], (req, resp) => {
         .end("OK");
 });
 
-app.listen(port, () => {
-    console.log(`Feast server listening locally at http://localhost:${port}`)
-});
+(async () => {
+    try {
+        cataData = await readCataData();
+        app.listen(port, () => {
+            console.log(`Feast server listening locally at http://localhost:${port}`)
+        });
+    }
+    catch (err) {
+        console.log(err);
+    }
+})();
+
