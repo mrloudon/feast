@@ -5,12 +5,52 @@ import * as LikingScale from "./likingScale.js";
 import * as Intension from "./intension.js";
 import * as Cata from "./cata.js";
 
-const tasks = [doCataTask, Intension.doIntensionTask, doLikingScalePage, doPracticeCompletedPage, FalsePositives.doFalsePositiveTask, Calibration.doCalibrationTask, doWelcomePage];
+const tasks = [doLandingPage, doWelcomePage, doCataTask, Intension.doIntensionTask, doLikingScalePage, doPracticeCompletedPage, 
+    FalsePositives.doFalsePositiveTask, Calibration.doCalibrationTask];
 
 const bodyKeys = {
     keyX: false,
     shiftLeft: false
 };
+
+async function doLandingPage() {
+    const page = document.getElementById("landing-page");
+    const input = page.querySelector("input");
+    const nextBtn = page.querySelector("button.next-btn");
+    const tds = page.querySelectorAll("td");
+    const idTh = page.querySelector(".table-id");
+    let cataData;
+
+    function nextBtnClick() {
+        nextBtn.removeEventListener("click", nextBtnClick);
+        Utility.fadeOut(page)
+            .then(nextTask);
+    }
+
+    function inputChange() {
+        const id = parseInt(input.value, 10);
+        if (typeof id === "number" && id > 0 && id <= 120) {
+            idTh.innerHTML = id;
+            for (let i = 0; i < tds.length; i++) {
+                tds[i].innerHTML = cataData[id - 1].cata[i];
+            }
+            nextBtn.disabled = false;
+        }
+        else {
+            idTh.innerHTML = "&mdash;";
+            tds.forEach(t => t.innerHTML = "&mdash;");
+            nextBtn.disabled = true;
+        }
+    }
+
+    input.addEventListener("input", inputChange);
+    nextBtn.addEventListener("click", nextBtnClick);
+    nextBtn.disabled = true;
+    cataData = await Cata.loadCataData();
+    
+    Utility.fadeIn(page)
+        .then(() => input.focus());
+}
 
 function doWelcomePage() {
     const page = document.getElementById("welcome-page");

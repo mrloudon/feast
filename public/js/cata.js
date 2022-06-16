@@ -72,8 +72,13 @@ function doCataTask(i, s, cb) {
     doResponsePage();
 }
 
-const cataStream = await fetch("cata");
-cataData = await cataStream.json();
-console.log("CATA data loaded.");
+async function loadCataData(){
+    const cataStream = await fetch("cata");
+    cataData = await cataStream.json();
+    console.log("CATA data loaded.");
+    return cataData;
+}
 
-export { doCataTask };
+
+
+export { doCataTask, loadCataData };
