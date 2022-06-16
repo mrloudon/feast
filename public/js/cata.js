@@ -72,7 +72,7 @@ function doCataTask(i, s, cb) {
     doResponsePage();
 }
 
-const cataStream = await fetch("/cata");
+const cataStream = await fetch("cata");
 cataData = await cataStream.json();
 console.log("CATA data loaded.");
 
