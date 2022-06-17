@@ -1,6 +1,6 @@
 import * as Utility from "./utility.js";
 
-let cataData, callback, index, sample;
+let cataData, index, sample;
 
 const headers = [
     `<ol>
@@ -14,71 +14,70 @@ const headers = [
 ];
 
 function doResponsePage() {
-    const page = document.getElementById("cata-response-page");
-    const buttons = page.querySelectorAll(".text-scale-item");
-    const nextBtn = page.querySelector(".next-btn");
+    return new Promise(function (resolve) {
+        const page = document.getElementById("cata-response-page");
+        const buttons = page.querySelectorAll(".text-scale-item");
+        const nextBtn = page.querySelector(".next-btn");
 
-    page.querySelector(".cata-header-div").innerHTML = headers[index];
-    page.querySelector(".sample-span").innerHTML = sample;
+        page.querySelector(".cata-header-div").innerHTML = headers[index];
+        page.querySelector(".sample-span").innerHTML = sample;
 
-    function buttonClick(evt) {
-        evt.currentTarget.checked = !evt.currentTarget.checked;
-        console.log(evt.currentTarget.checked);
-        if (evt.currentTarget.checked) {
-            evt.currentTarget.classList.add("btn-success");
-            evt.currentTarget.classList.remove("btn-danger");
-        }
-        else {
-            evt.currentTarget.classList.add("btn-danger");
-            evt.currentTarget.classList.remove("btn-success");
-        }
-    }
-
-    function removeListeners() {
-        nextBtn.removeEventListener("click", nextBtnClick);
-        buttons.forEach(btn => btn.removeEventListener("click", buttonClick));
-    }
-
-    function nextBtnClick() {
-        let result = ",";
-        buttons.forEach(btn => {
-            if (btn.checked) {
-                result += `${btn.innerHTML} `;
+        function buttonClick(evt) {
+            evt.currentTarget.checked = !evt.currentTarget.checked;
+            console.log(evt.currentTarget.checked);
+            if (evt.currentTarget.checked) {
+                evt.currentTarget.classList.add("btn-success");
+                evt.currentTarget.classList.remove("btn-danger");
             }
-        });
-        removeListeners();
-        console.log(result);
-        Utility.fadeOut(page)
-            .then(callback);
-    }
+            else {
+                evt.currentTarget.classList.add("btn-danger");
+                evt.currentTarget.classList.remove("btn-success");
+            }
+        }
 
-    for (let i = 0; i < buttons.length; i++) {
-        buttons[i].classList.remove("btn-success");
-        buttons[i].classList.add("btn-danger");
-        buttons[i].innerHTML = cataData[index].cata[i];
-        buttons[i].checked = false;
-        buttons[i].addEventListener("click", buttonClick);
-    }
+        function removeListeners() {
+            nextBtn.removeEventListener("click", nextBtnClick);
+            buttons.forEach(btn => btn.removeEventListener("click", buttonClick));
+        }
 
-    nextBtn.addEventListener("click", nextBtnClick);
-    Utility.fadeIn(page);
-    console.log(cataData[index]);
+        function nextBtnClick() {
+            let result = ",";
+            buttons.forEach(btn => {
+                if (btn.checked) {
+                    result += `${btn.innerHTML} `;
+                }
+            });
+            removeListeners();
+            console.log(result);
+            Utility.fadeOut(page)
+                .then(() => resolve(result));
+        }
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("btn-success");
+            buttons[i].classList.add("btn-danger");
+            buttons[i].innerHTML = cataData[index].cata[i];
+            buttons[i].checked = false;
+            buttons[i].addEventListener("click", buttonClick);
+        }
+
+        nextBtn.addEventListener("click", nextBtnClick);
+        Utility.fadeIn(page);
+        console.log(cataData[index]);
+    });
 }
 
-function doCataTask(i, s, cb) {
-    callback = cb;
+function doCataTask(i, s) {
     index = i;
     sample = s;
-    doResponsePage();
+    return doResponsePage();
 }
 
-async function loadCataData(){
+async function loadCataData() {
     const cataStream = await fetch("cata");
     cataData = await cataStream.json();
     console.log("CATA data loaded.");
     return cataData;
 }
-
-
 
 export { doCataTask, loadCataData };

@@ -11,6 +11,11 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="css/template.css">
     <link rel="stylesheet" href="css/feast.css">
+    <style>
+        input[type=radio] {
+            transform: scale(1.2);
+        }
+    </style>
     <script src="js/hcd.js" type="module"></script>
 </head>
 
@@ -35,7 +40,20 @@
                         <input type="number" min="1" max="120" autofocus>
                     </div>
                     <div class="col">
-
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="session-radio-1" id="session-radio-1"
+                                value="1">
+                            <label class="form-check-label" for="session-radio-1">
+                                Session 1
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="session-radio-1" id="session-radio-2"
+                                value="2">
+                            <label class="form-check-label" for="session-radio-2">
+                                Session 2
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <table class="table my-5">
@@ -81,7 +99,7 @@
                     </tbody>
                 </table>
                 <div class="my-4 text-center">
-                    <button type="button" class="btn btn-primary btn-lg next-btn">Next</button>
+                    <button type="button" class="btn btn-primary btn-lg next-btn" disabled>Next</button>
                 </div>
             </div>
         </div>
@@ -341,17 +359,18 @@
             <div class="ps-4 py-4">
                 <ol>
                     <li>
-                        Press the space bar as quickly as you can if you think 
+                        Press the space bar as quickly as you can if you think
                         <strong>the sample made you feel</strong> as the emotion word.
                     </li>
                     <li>
-                        If you don't think the sample made you feel like that do nothing and wait for the next word to appear. 
+                        If you don't think the sample made you feel like that do nothing and wait for the next word to
+                        appear.
                     </li>
                     <li>
                         There are no right or wrong answers. For the best results go with your first impressions.
                     </li>
                     <li>
-                        Click <strong>Next</strong> button to continue. 
+                        Click <strong>Next</strong> button to continue.
                     </li>
                 </ol>
             </div>
@@ -362,7 +381,7 @@
         <!----------------------------------------------------------------------------------------------------->
         <div class="page-content" id="intension-task-page">
             <div class="text-center">
-                
+
             </div>
         </div>
         <!----------------------------------------------------------------------------------------------------->

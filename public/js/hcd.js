@@ -1,11 +1,10 @@
 import * as Utility from "./utility.js";
 import * as Calibration from "./calibration.js";
 import * as FalsePositives from "./falsePositive.js";
-import * as LikingScale from "./likingScale.js";
-import * as Intension from "./intension.js";
-import * as Cata from "./cata.js";
+import * as Product from "./product.js";
+import { loadCataData } from "./cata.js";
 
-const tasks = [doLandingPage, doWelcomePage, doCataTask, Intension.doIntensionTask, doLikingScalePage, doPracticeCompletedPage, 
+const tasks = [Product.doProduct, doLandingPage, doWelcomePage, doPracticeCompletedPage,
     FalsePositives.doFalsePositiveTask, Calibration.doCalibrationTask];
 
 const bodyKeys = {
@@ -13,41 +12,60 @@ const bodyKeys = {
     shiftLeft: false
 };
 
+let session = false;
+let participantId = false;
+
 async function doLandingPage() {
     const page = document.getElementById("landing-page");
     const input = page.querySelector("input");
     const nextBtn = page.querySelector("button.next-btn");
     const tds = page.querySelectorAll("td");
     const idTh = page.querySelector(".table-id");
+    const rbs = page.querySelectorAll(".form-check-input");
+
     let cataData;
+    session = false;
+    participantId = false;
 
     function nextBtnClick() {
         nextBtn.removeEventListener("click", nextBtnClick);
+        input.removeEventListener("input", inputChange);
+        rbs.forEach(rb => rb.removeEventListener("click", rbClick));
         Utility.fadeOut(page)
             .then(nextTask);
     }
 
     function inputChange() {
-        const id = parseInt(input.value, 10);
-        if (typeof id === "number" && id > 0 && id <= 120) {
-            idTh.innerHTML = id;
+        participantId = parseInt(input.value, 10);
+        if (typeof participantId === "number" && participantId > 0 && participantId <= 120) {
+            idTh.innerHTML = participantId;
             for (let i = 0; i < tds.length; i++) {
-                tds[i].innerHTML = cataData[id - 1].cata[i];
+                tds[i].innerHTML = cataData[participantId - 1].cata[i];
             }
             nextBtn.disabled = false;
         }
         else {
+            participantId = false;
             idTh.innerHTML = "&mdash;";
             tds.forEach(t => t.innerHTML = "&mdash;");
             nextBtn.disabled = true;
         }
+        nextBtn.disabled = !(participantId && session);
+    }
+
+    function rbClick(event) {
+        console.log(event.target.value);
+        session = event.target.value;
+        nextBtn.disabled = !(participantId && session);
     }
 
     input.addEventListener("input", inputChange);
     nextBtn.addEventListener("click", nextBtnClick);
+    rbs.forEach(rb => rb.addEventListener("click", rbClick));
+
     nextBtn.disabled = true;
-    cataData = await Cata.loadCataData();
-    
+    cataData = await loadCataData();
+
     Utility.fadeIn(page)
         .then(() => input.focus());
 }
@@ -83,32 +101,6 @@ function doPracticeCompletedPage() {
 
     nextBtn.addEventListener("click", nextBtnClick);
     Utility.fadeIn(page);
-}
-
-function doLikingScalePage() {
-
-    const page = document.getElementById("liking-scale-page");
-    const nextBtn = page.querySelector(".next-btn");
-
-    function callback(value) {
-        nextBtn.disabled = false;
-        console.log(value);
-    }
-
-    function nextBtnClick() {
-        nextBtn.removeEventListener("click", nextBtnClick);
-        Utility.fadeOut(page)
-            .then(nextTask);
-    }
-
-    nextBtn.disabled = true;
-    nextBtn.addEventListener("click", nextBtnClick);
-    LikingScale.doLikingScalePage(page, callback);
-    Utility.fadeIn(page);
-}
-
-function doCataTask(){
-    Cata.doCataTask(1, 235, nextTask);
 }
 
 function nextTask(err, result) {
