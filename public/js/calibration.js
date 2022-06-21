@@ -40,9 +40,10 @@ function doPracticeTask1Instructions2Page() {
 
 function doReactionTimePage() {
     const N_TRIALS = 10;
-    const MIN_ITI = 800;
-    const MAX_ITI = 1200
-    const MAX_RT = 500;
+    // const MIN_ITI = 800;
+    // const MAX_ITI = 1200
+    const ITI = 500;
+    const MAX_RT = 3000;
 
     const page = document.getElementById("reaction-time-page");
     const stimulus = page.querySelector(".stimulus");
@@ -54,7 +55,8 @@ function doReactionTimePage() {
     let rts = [], startTime;
 
     function getITI() {
-        return Math.floor(Math.random() * (MAX_ITI - MIN_ITI) + MIN_ITI);
+        //return Math.floor(Math.random() * (MAX_ITI - MIN_ITI) + MIN_ITI);
+        return ITI;
     }
 
     function showStimulus() {
@@ -108,7 +110,9 @@ function doReactionTimePage() {
     document.body.addEventListener("keydown", keyDown);
 
     Utility.fadeIn(page)
-        .then(showStimulus);
+        .then(() => {
+            setTimeout(showStimulus, MAX_RT - ITI);
+        });
 }
 
 function nextTask(err, result) {

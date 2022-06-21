@@ -10,7 +10,7 @@ const DEMO_OUTPUT_FILE = "./public/ChSgHo1TwE.csv";
 
 const app = express();
 const port = 8010
-let cataData;
+let cataData, falsePositiveData;
 
 function constructPilotCSVHeader() {
     //const words = ["Satisfied", "Comforted", "Happy", "Indulgent", "Pleasant", "Nostalgic", "Bored", "Disappointed", "Disgusted", "Relaxed", "Uncomfortable", "Delight"];
@@ -70,17 +70,66 @@ function readCataData() {
     });
 }
 
+function readFalsePositiveData() {
+    const falsePositiveData = [];
+    let first = true;
+    let arr;
+
+    return new Promise(function (resolve, reject) {
+
+        try {
+            const rl = readline.createInterface({
+                input: fs.createReadStream("FalsePositive.csv"),
+                crlfDelay: Infinity
+            });
+
+            rl.on("line", (line) => {
+                const item = {};
+                if (first) {
+                    first = false;
+                }
+                else {
+                    arr = line.split(",");
+                    item.sampleSet = arr[0];
+                    item.words = arr.splice(1);
+                    falsePositiveData.push(item);
+                }
+            });
+
+            events.once(rl, "close")
+                .then(() => {
+                    resolve(falsePositiveData);
+                });
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
+
 app.use(express.json());
 app.disable("x-powered-by");
 app.use(express.static("public"));
 
 app.get("/hi", (req, res) => {
     res.send('Hello World!');
-})
+});
 
 app.get("/cata", (req, resp) => {
     resp.send(cataData);
-})
+});
+
+app.get("/falsePositives", (req, resp) => {
+    const id = parseInt(req.query.id, 10);
+    if(!isNaN(id)){
+        resp.send([falsePositiveData[id * 2 - 2], falsePositiveData[id * 2 - 1]]);
+    }
+    else{
+        resp.statusMessage = "Bad ID";
+        resp.status(400).end();
+    }
+});
+
 
 app.post(["/submit", "/feast/submit"], (req, resp) => {
     const dt = new Date();
@@ -141,6 +190,7 @@ app.post(["/submitPilot", "/feast/submitPilot"], (req, resp) => {
 (async () => {
     try {
         cataData = await readCataData();
+        falsePositiveData = await readFalsePositiveData();
         app.listen(port, () => {
             console.log(`Feast server listening locally at http://localhost:${port}`)
         });

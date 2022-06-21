@@ -1,44 +1,62 @@
 import * as Utility from "./utility.js";
 
-let masterCallback;
-
-const symbolImages = ["img/dislike-extremely.png", "img/dislike-moderately.png", "img/dislike-slightly.png"];
-const tasks = [doPracticeTask2Instructions1Page, doPracticeTask2Instructions2Page, doPracticeTask2];
+let params;
 
 function doPracticeTask2Instructions1Page() {
     const page = document.getElementById("practice-task-2-instructions-1-page");
     const nextBtn = page.querySelector("button.next-btn");
 
-    function nextBtnClick() {
-        nextBtn.removeEventListener("click", nextBtnClick);
-        Utility.fadeOut(page)
-            .then(nextTask);
-    }
+    return new Promise(function (resolve) {
+        function nextBtnClick() {
+            nextBtn.removeEventListener("click", nextBtnClick);
+            Utility.fadeOut(page)
+                .then(resolve);
+        }
 
-    nextBtn.addEventListener("click", nextBtnClick);
-    Utility.fadeIn(page);
+        nextBtn.addEventListener("click", nextBtnClick);
+        Utility.fadeIn(page);
+    });
 }
 
 function doPracticeTask2Instructions2Page() {
     const page = document.getElementById("practice-task-2-instructions-2-page");
+    const nextBtn = page.querySelector("button.next-btn");
 
-    function keyDown(evt) {
-        if (evt.keyCode === 32) {
-            document.body.removeEventListener("keydown", keyDown);
-            evt.preventDefault();
-            evt.stopPropagation();
+    return new Promise(function (resolve) {
+        function nextBtnClick() {
+            nextBtn.removeEventListener("click", nextBtnClick);
             Utility.fadeOut(page)
-                .then(nextTask);
-            return false;
+                .then(resolve);
         }
-    }
 
-    Utility.hideJumbos();
-    document.body.addEventListener("keydown", keyDown);
-    Utility.fadeIn(page);
+        nextBtn.addEventListener("click", nextBtnClick);
+        Utility.fadeIn(page);
+    });
+}
+
+function doPracticeTask2Instructions3Page() {
+    const page = document.getElementById("practice-task-2-instructions-3-page");
+
+    return new Promise(function (resolve) {
+        function keyDown(evt) {
+            if (evt.keyCode === 32) {
+                document.body.removeEventListener("keydown", keyDown);
+                evt.preventDefault();
+                evt.stopPropagation();
+                Utility.fadeOut(page)
+                    .then(resolve);
+                return false;
+            }
+        }
+
+        Utility.hideJumbos();
+        document.body.addEventListener("keydown", keyDown);
+        Utility.fadeIn(page);
+    });
 }
 
 function doPracticeTask2() {
+    const numberWords = ["Nine", "Five", "Seven", "Two", "Four"];
     const page = document.getElementById("practice-task-2-stimulus-page");
     const warningDiv = page.querySelector(".warning-div");
     const img = page.querySelector("img");
@@ -66,7 +84,6 @@ function doPracticeTask2() {
                 Utility.fadeOut(page)
                     .then(() => {
                         Utility.showJumbos();
-                        masterCallback();
                     });
                 return;
             }
@@ -115,27 +132,22 @@ function doPracticeTask2() {
     Utility.hideJumbos();
     warningDiv.classList.add("invisible");
     wordDiv.innerHTML = "&nbsp;";
-    img.src = symbolImages[0];
+    // img.src = symbolImages[0];
     document.body.addEventListener("keydown", keyDown);
     Utility.fadeIn(page)
         .then(showStimulus);
 }
 
-function nextTask(err, result) {
-    console.log(`nextTask(${err}, ${result})`);
-    if (err) {
-        throw err;
-    }
-    const task = tasks.shift();
-    if (task) {
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
-        task(nextTask, result);
-    }
-}
+function doFalsePositiveTask(p) {
+    params = p;
+    console.log(params.words);
 
-function doFalsePositiveTask(cb) {
-    masterCallback = cb;
-    nextTask();
+    return new Promise(function (resolve) {
+        doPracticeTask2Instructions1Page()
+            .then(doPracticeTask2Instructions2Page)
+            .then(doPracticeTask2Instructions3Page)
+            .then(() => resolve());
+    });
 }
 
 export { doFalsePositiveTask };
