@@ -1,5 +1,8 @@
 import * as Utility from "./utility.js";
 
+const correctNumberWords = ["Four", "Two", "Five", "Nine", "Seven"];
+const correctSymbolWords = ["Tree", "Flower", "Ball", "Heart", "Apple"];
+
 let params;
 
 function doPracticeTask2Instructions1Page() {
@@ -13,6 +16,7 @@ function doPracticeTask2Instructions1Page() {
                 .then(resolve);
         }
 
+        Utility.showJumbos();
         nextBtn.addEventListener("click", nextBtnClick);
         Utility.fadeIn(page);
     });
@@ -55,98 +59,139 @@ function doPracticeTask2Instructions3Page() {
     });
 }
 
-function doPracticeTask2() {
-    const numberWords = ["Nine", "Five", "Seven", "Two", "Four"];
+function doPracticeTask2Instructions4Page() {
+    const page = document.getElementById("practice-task-2-instructions-4-page");
+
+    return new Promise(function (resolve) {
+
+        function keyDown(evt) {
+            if (evt.keyCode === 32) {
+                document.body.removeEventListener("keydown", keyDown);
+                evt.preventDefault();
+                evt.stopPropagation();
+                Utility.fadeOut(page)
+                    .then(resolve);
+                return false;
+            }
+        }
+
+        Utility.hideJumbos();
+        document.body.addEventListener("keydown", keyDown);
+        Utility.fadeIn(page);
+    });
+}
+
+function doPracticeTask2(p) {
     const page = document.getElementById("practice-task-2-stimulus-page");
     const warningDiv = page.querySelector(".warning-div");
     const img = page.querySelector("img");
     const wordDiv = page.querySelector(".word-div");
-
-    const words = ["Red", "Dog", "Rock"];
-
-    const ITI = 1000;
-    const N_TRIALS = 3;
-    const MAX_RT = 500;
-    const WARNING_TIME = 250;
-
-    let acceptKeypresses = false;
-    let currentTrial = 0;
-    let tooSlowTimer;
-    let tooSlow = false;
-    let rts = [], startTime;
-
-    function showStimulus() {
-        setTimeout(() => {
-            console.log(currentTrial);
-            if (currentTrial === N_TRIALS) {
-                console.log(rts);
-                console.log(rts.length);
-                Utility.fadeOut(page)
-                    .then(() => {
-                        Utility.showJumbos();
-                    });
-                return;
-            }
-            wordDiv.innerHTML = words[currentTrial];
-            currentTrial++;
-            startTime = Date.now();
-            acceptKeypresses = true;
-            tooSlow = false;
-            tooSlowTimer = setTimeout(() => {
-                console.log("too slow");
-                wordDiv.innerHTML = "&nbsp;";
-                warningDiv.classList.remove("invisible");
-                acceptKeypresses = false;
-                setTimeout(() => {
-                    acceptKeypresses = true;
-                }, WARNING_TIME);
-                tooSlow = true;
-                if (currentTrial > 0) {
-                    currentTrial--;
-                }
-            }, MAX_RT);
-        }, ITI);
-
-    }
-
-    function keyDown(evt) {
-        if (acceptKeypresses && evt.keyCode === 32) {
-            acceptKeypresses = false;
-            wordDiv.innerHTML = "&nbsp;";
-            if (tooSlow) {
-                warningDiv.classList.add("invisible");
-            }
-            else {
-                rts.push(Date.now() - startTime);
-                window.clearTimeout(tooSlowTimer);
-            }
-            evt.preventDefault();
-            evt.stopPropagation();
-            showStimulus();
-            return false;
-        }
-    }
-
-    acceptKeypresses = false;
-    currentTrial = 0;
-    Utility.hideJumbos();
-    warningDiv.classList.add("invisible");
-    wordDiv.innerHTML = "&nbsp;";
-    // img.src = symbolImages[0];
-    document.body.addEventListener("keydown", keyDown);
-    Utility.fadeIn(page)
-        .then(showStimulus);
-}
-
-function doFalsePositiveTask(p) {
-    params = p;
-    console.log(params.words);
+    const ITI_1 = 3000;
+    const ITI_2 = 500;
+    const N_TRIALS = 5;
 
     return new Promise(function (resolve) {
-        doPracticeTask2Instructions1Page()
-            .then(doPracticeTask2Instructions2Page)
-            .then(doPracticeTask2Instructions3Page)
-            .then(() => resolve());
+
+        let currentTrial = 0;
+        let missed = false;
+        let acceptKeyPresses = false;
+        let threeSecondTimer;
+        let currentWord;
+
+        params = p;
+
+        function endTask() {
+            console.log("Trials completed");
+            document.removeEventListener("keydown", keyDown);
+            Utility.fadeOut(page)
+                .then(resolve);
+        }
+
+        function keyDown(evt) {
+            if (acceptKeyPresses && evt.keyCode === 32) {
+                acceptKeyPresses = false;
+                if (missed) {
+                    console.log("Next trial after miss");
+                    missed = false;
+                    warningDiv.classList.add("invisible");
+                    showStimulus();
+                }
+                else {
+                    window.clearTimeout(threeSecondTimer);
+                    if (params.correct.includes(currentWord)) {
+                        console.log("Hit");
+                        wordDiv.innerHTML = "&nbsp;";
+                    }
+                    else {
+                        console.log("False alarm");
+                    }
+                    if (currentTrial === N_TRIALS) {
+                        endTask();
+                    }
+                    else {
+                        setTimeout(() => {
+                            showStimulus();
+                        }, ITI_2);
+                    }
+                }
+                evt.preventDefault();
+                evt.stopPropagation();
+                return false;
+            }
+        }
+
+        function showStimulus() {
+            currentWord = params.words[currentTrial++]
+            console.log(`Trial: ${currentTrial}`);
+            wordDiv.innerHTML = currentWord;
+            acceptKeyPresses = true;
+
+            threeSecondTimer = setTimeout(() => {
+                if (currentTrial === N_TRIALS) {
+                    endTask();
+                    return;
+                }
+                if (params.correct.includes(currentWord)) {
+                    console.log("Miss");
+                    missed = true;
+                    warningDiv.classList.remove("invisible");
+                }
+                else {
+                    console.log("Correct rejection");
+                    showStimulus();
+                }
+            }, ITI_1);
+        }
+
+        warningDiv.classList.add("invisible");
+        img.src = params.image;
+
+        document.addEventListener("keydown", keyDown);
+        Utility.fadeIn(page)
+            .then(showStimulus);
+    });
+}
+
+function doFalsePositiveTaskPart1(p) {
+
+    return Promise.resolve(doPracticeTask2Instructions1Page()
+        .then(doPracticeTask2Instructions2Page)
+        .then(doPracticeTask2Instructions3Page)
+        .then(() => doPracticeTask2(p)));
+
+}
+
+async function doFalsePositiveTask(falsePositiveData) {
+    await doFalsePositiveTaskPart1({
+        words: falsePositiveData[0].words,
+        correct: correctNumberWords,
+        image: "img/numbers.png"
+    });
+    await doPracticeTask2Instructions4Page();
+    await doPracticeTask2({
+        words: falsePositiveData[1].words,
+        correct: correctSymbolWords,
+        image: "img/symbols2.png"
     });
 }
 

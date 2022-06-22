@@ -4,10 +4,6 @@ import * as FalsePositives from "./falsePositive.js";
 import * as Product from "./product.js";
 import { loadCataData } from "./cata.js";
 
-/* const tasks = [doLandingPage, FalsePositives.doFalsePositiveTask, Calibration.doCalibrationTask, Product.doProduct,
-    doWelcomePage,
-    doPracticeCompletedPage, FalsePositives.doFalsePositiveTask]; */
-
 const bodyKeys = {
     keyX: false,
     shiftLeft: false
@@ -87,64 +83,78 @@ async function doLandingPage() {
 
 }
 
-/* function doWelcomePage() {
+function doWelcomePage() {
     const page = document.getElementById("welcome-page");
     const nextBtn = page.querySelector("button.next-btn");
 
+    return new Promise(function (resolve) {
+        function nextBtnClick() {
+            nextBtn.removeEventListener("click", nextBtnClick);
+            Utility.fadeOut(page)
+                .then(() => {
+                    Utility.showJumbos();
+                    resolve();
+                });
+        }
 
-    function nextBtnClick() {
-        nextBtn.removeEventListener("click", nextBtnClick);
-        Utility.fadeOut(page)
-            .then(() => {
-                Utility.showJumbos();
-                nextTask();
-            });
-    }
-
-    Utility.hideJumbos();
-    nextBtn.addEventListener("click", nextBtnClick);
-    Utility.fadeIn(page);
+        Utility.hideJumbos();
+        nextBtn.addEventListener("click", nextBtnClick);
+        Utility.fadeIn(page);
+    });
 }
 
 function doPracticeCompletedPage() {
     const page = document.getElementById("practice-completed-1-page");
     const nextBtn = page.querySelector(".next-btn");
 
-    function nextBtnClick() {
-        nextBtn.removeEventListener("click", nextBtnClick);
-        Utility.fadeOut(page)
-            .then(nextTask);
-    }
-
-    nextBtn.addEventListener("click", nextBtnClick);
-    Utility.fadeIn(page);
-} */
+    return new Promise(function(resolve){
+        function nextBtnClick() {
+            nextBtn.removeEventListener("click", nextBtnClick);
+            Utility.fadeOut(page)
+                .then(resolve);
+        }
+    
+        nextBtn.addEventListener("click", nextBtnClick);
+        Utility.fadeIn(page);
+    });
+}
 
 async function run() {
+
+    function initialise(){
+        document.body.style.overflow = "hidden";
+        document.body.addEventListener("keydown", evt => {
+            if (evt.code === "KeyX") {
+                bodyKeys.keyX = true;
+            }
+            if (evt.code === "ShiftLeft") {
+                bodyKeys.shiftLeft = true;
+            }
+            if (bodyKeys.keyX && bodyKeys.shiftLeft) {
+                window.location.reload();
+            }
+        });
+        document.body.addEventListener("keyup", evt => {
+            if (evt.code === "ShiftLeft") {
+                bodyKeys.shiftLeft = false;
+            }
+            if (evt.code === "KeyX") {
+                bodyKeys.keyX = false;
+            }
+        });
+    }
+
     console.log("Running.");
-    document.body.style.overflow = "hidden";
-    document.body.addEventListener("keydown", evt => {
-        if (evt.code === "KeyX") {
-            bodyKeys.keyX = true;
-        }
-        if (evt.code === "ShiftLeft") {
-            bodyKeys.shiftLeft = true;
-        }
-        if (bodyKeys.keyX && bodyKeys.shiftLeft) {
-            window.location.reload();
-        }
-    });
-    document.body.addEventListener("keyup", evt => {
-        if (evt.code === "ShiftLeft") {
-            bodyKeys.shiftLeft = false;
-        }
-        if (evt.code === "KeyX") {
-            bodyKeys.keyX = false;
-        }
-    });
+    initialise();
 
     await doLandingPage();
-    await FalsePositives.doFalsePositiveTask({ words: falsePositiveData[0].words });
+    await Product.doProduct();
+    await doWelcomePage();
+    await Calibration.doCalibrationTask();
+    await FalsePositives.doFalsePositiveTask(falsePositiveData);
+    await doPracticeCompletedPage();
+    await Product.doProduct();
+    
     console.log("Done.");
 }
 

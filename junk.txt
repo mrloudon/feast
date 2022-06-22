@@ -1,0 +1,80 @@
+function doPracticeTask2() {
+    const page = document.getElementById("practice-task-2-stimulus-page");
+    const warningDiv = page.querySelector(".warning-div");
+    //const img = page.querySelector("img");
+    const wordDiv = page.querySelector(".word-div");
+    const ITI = 3000;
+    const N_TRIALS = 3;
+   /*  const MAX_RT = 500;
+    const WARNING_TIME = 250;
+ */
+    return new Promise(function(resolve){
+        let acceptKeypresses = false;
+        let currentTrial = 0;
+        /* let tooSlowTimer;
+        let tooSlow = false; */
+        let rts = [], startTime;
+    
+        function showStimulus() {
+            setTimeout(() => {
+                console.log(currentTrial);
+                if (currentTrial === N_TRIALS) {
+                    console.log(rts);
+                    console.log(rts.length);
+                    Utility.fadeOut(page)
+                        .then(() => {
+                            Utility.showJumbos();
+                            document.body.removeEventListener("keydown", keyDown);
+                            resolve();
+                        });
+                }
+                wordDiv.innerHTML = params.words[currentTrial];
+                currentTrial++;
+                startTime = Date.now();
+                acceptKeypresses = true;
+                /* tooSlow = false;
+                tooSlowTimer = setTimeout(() => {
+                    console.log("too slow");
+                    wordDiv.innerHTML = "&nbsp;";
+                    warningDiv.classList.remove("invisible");
+                    acceptKeypresses = false;
+                    setTimeout(() => {
+                        acceptKeypresses = true;
+                    }, WARNING_TIME);
+                    tooSlow = true;
+                    if (currentTrial > 0) {
+                        currentTrial--;
+                    }
+                }, MAX_RT); */
+            }, ITI);
+        }
+    
+        function keyDown(evt) {
+            if (acceptKeypresses && evt.keyCode === 32) {
+                acceptKeypresses = false;
+                wordDiv.innerHTML = "&nbsp;";
+                if (tooSlow) {
+                    warningDiv.classList.add("invisible");
+                }
+                else {
+                    rts.push(Date.now() - startTime);
+                    window.clearTimeout(tooSlowTimer);
+                }
+                evt.preventDefault();
+                evt.stopPropagation();
+                showStimulus();
+                return false;
+            }
+        }
+    
+        acceptKeypresses = false;
+        currentTrial = 0;
+        Utility.hideJumbos();
+        warningDiv.classList.add("invisible");
+        wordDiv.innerHTML = "&nbsp;";
+        // img.src = symbolImages[0];
+        document.body.addEventListener("keydown", keyDown);
+        Utility.fadeIn(page)
+            .then(showStimulus);
+    });   
+}
