@@ -107,13 +107,13 @@ function doPracticeCompletedPage() {
     const page = document.getElementById("practice-completed-1-page");
     const nextBtn = page.querySelector(".next-btn");
 
-    return new Promise(function(resolve){
+    return new Promise(function (resolve) {
         function nextBtnClick() {
             nextBtn.removeEventListener("click", nextBtnClick);
             Utility.fadeOut(page)
                 .then(resolve);
         }
-    
+
         nextBtn.addEventListener("click", nextBtnClick);
         Utility.fadeIn(page);
     });
@@ -121,7 +121,7 @@ function doPracticeCompletedPage() {
 
 async function run() {
 
-    function initialise(){
+    function initialise() {
         document.body.style.overflow = "hidden";
         document.body.addEventListener("keydown", evt => {
             if (evt.code === "KeyX") {
@@ -147,14 +147,17 @@ async function run() {
     console.log("Running.");
     initialise();
 
-    await doLandingPage();
-    await Product.doProduct();
-    await doWelcomePage();
+    //await doLandingPage();
+    await doPracticeCompletedPage();
+    await Product.doProduct({ sampleCode: 345 });
+    await Product.doProduct({ sampleCode: 123 });
+    
+    /* await doWelcomePage();
     await Calibration.doCalibrationTask();
     await FalsePositives.doFalsePositiveTask(falsePositiveData);
     await doPracticeCompletedPage();
-    await Product.doProduct();
-    
+    await Product.doProduct(); */
+
     console.log("Done.");
 }
 

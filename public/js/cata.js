@@ -1,6 +1,6 @@
 import * as Utility from "./utility.js";
 
-let cataData, index, sample;
+let cataData, indx, sample;
 
 const headers = [
     `<ol>
@@ -19,7 +19,7 @@ function doResponsePage() {
         const buttons = page.querySelectorAll(".text-scale-item");
         const nextBtn = page.querySelector(".next-btn");
 
-        page.querySelector(".cata-header-div").innerHTML = headers[index];
+        page.querySelector(".cata-header-div").innerHTML = headers[indx];
         page.querySelector(".sample-span").innerHTML = sample;
 
         function buttonClick(evt) {
@@ -56,20 +56,20 @@ function doResponsePage() {
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].classList.remove("btn-success");
             buttons[i].classList.add("btn-danger");
-            buttons[i].innerHTML = cataData[index].cata[i];
+            buttons[i].innerHTML = cataData[indx].cata[i];
             buttons[i].checked = false;
             buttons[i].addEventListener("click", buttonClick);
         }
 
         nextBtn.addEventListener("click", nextBtnClick);
         Utility.fadeIn(page);
-        console.log(cataData[index]);
+        console.log(cataData[indx]);
     });
 }
 
-function doCataTask(i, s) {
-    index = i;
-    sample = s;
+function doCataTask({ index, sampleCode }) {
+    sample = sampleCode;
+    indx = index;
     return doResponsePage();
 }
 

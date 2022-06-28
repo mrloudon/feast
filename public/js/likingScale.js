@@ -31,6 +31,7 @@ function doLikingScalePage(page, cb) {
 
     let i = 0;
     callback = cb;
+    textScaleHTML = "";
 
     textNamesHTML.forEach(captionHTML => {
         const btnHTML = `<button type="button" class="col btn btn-primary text-scale-item" data-id="${i}">${captionHTML}</button>`;
