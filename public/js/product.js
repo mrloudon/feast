@@ -34,13 +34,13 @@ function doLikingScalePage({ sampleCode }) {
     });
 }
 
-async function doProduct({ sampleCode }) {
+async function doProduct({ sampleCode, session }) {
     const choice = await doLikingScalePage({ sampleCode });
     console.log(choice);
     await Cata.loadCataData();
     await Intension.doIntensionTask({ sampleCode });
-    await Cata.doCataTask({ sampleCode, index: 0 });
-    await Cata.doCataTask({ sampleCode, index: 1 });
+    await Cata.doCataTask({ sampleCode, session });
+    await Cata.doCataTask({ sampleCode, session });
 }
 
 export { doProduct };

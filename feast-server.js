@@ -10,7 +10,7 @@ const DEMO_OUTPUT_FILE = "./public/ChSgHo1TwE.csv";
 
 const app = express();
 const port = 8010
-let cataData, falsePositiveData;
+let cataData, falsePositiveData, sampleData;
 
 function constructPilotCSVHeader() {
     //const words = ["Satisfied", "Comforted", "Happy", "Indulgent", "Pleasant", "Nostalgic", "Bored", "Disappointed", "Disgusted", "Relaxed", "Uncomfortable", "Delight"];
@@ -33,6 +33,43 @@ function constructPilotCSVHeader() {
     headerCSV += "\n";
     return headerCSV;
 }
+
+function readSampleData() {
+    const cataData = [];
+    let first = true;
+    let arr;
+
+    return new Promise(function (resolve, reject) {
+
+        try {
+            const rl = readline.createInterface({
+                input: fs.createReadStream("SampleOrder.csv"),
+                crlfDelay: Infinity
+            });
+
+            rl.on("line", (line) => {
+                const item = {};
+                if (first) {
+                    first = false;
+                }
+                else {
+                    arr = line.split(",");
+                    item.subject = arr[0];
+                    item.samples = arr.splice(1);
+                    cataData.push(item);
+                }
+            });
+
+            events.once(rl, "close")
+                .then(() => {
+                    resolve(cataData);
+                });
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
 
 function readCataData() {
     const cataData = [];
@@ -119,6 +156,10 @@ app.get("/cata", (req, resp) => {
     resp.send(cataData);
 });
 
+app.get("/samples", (req, resp) => {
+    resp.send(sampleData);
+});
+
 app.get("/falsePositives", (req, resp) => {
     const id = parseInt(req.query.id, 10);
     if(!isNaN(id)){
@@ -189,6 +230,7 @@ app.post(["/submitPilot", "/feast/submitPilot"], (req, resp) => {
 
 (async () => {
     try {
+        sampleData = await readSampleData();
         cataData = await readCataData();
         falsePositiveData = await readFalsePositiveData();
         app.listen(port, () => {

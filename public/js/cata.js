@@ -67,9 +67,9 @@ function doResponsePage() {
     });
 }
 
-function doCataTask({ index, sampleCode }) {
+function doCataTask({ session, sampleCode }) {
     sample = sampleCode;
-    indx = index;
+    indx = (session === "1") ? 0 : 1;
     return doResponsePage();
 }
 

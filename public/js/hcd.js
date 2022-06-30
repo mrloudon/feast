@@ -11,8 +11,17 @@ const bodyKeys = {
 
 let session = false;
 let participantId = false;
-let cataData;
+//let cataData;
 let falsePositiveData;
+let globalsampleData;
+let sampleData;
+
+async function loadGlobalSampleData() {
+    const sampleStream = await fetch("samples");
+    const data = await sampleStream.json();
+    console.log("Sample data loaded.");
+    return data;
+}
 
 async function loadFalsePositiveData() {
     const falsePositiveStream = await fetch(`falsePositives?id=${participantId}`);
@@ -30,7 +39,8 @@ async function doLandingPage() {
 
     session = false;
     participantId = false;
-    cataData = await loadCataData();
+    globalsampleData = await loadGlobalSampleData();
+    //cataData = await loadCataData();
 
     return new Promise(function (resolve) {
 
@@ -50,8 +60,18 @@ async function doLandingPage() {
             participantId = parseInt(input.value, 10);
             if (typeof participantId === "number" && participantId > 0 && participantId <= 120) {
                 idTh.innerHTML = participantId;
-                for (let i = 0; i < tds.length; i++) {
-                    tds[i].innerHTML = cataData[participantId - 1].cata[i];
+                if (session) {
+                    sampleData = (session === "1") ? globalsampleData[participantId - 1].samples.slice(5) : globalsampleData[participantId - 1].samples.slice(-5);
+                    console.log(sampleData);
+                    for (let i = 0; i < tds.length; i++) {
+                        if (session === "1") {
+                            tds[i].innerHTML = globalsampleData[participantId - 1].samples[i];
+
+                        }
+                        else {
+                            tds[i].innerHTML = globalsampleData[participantId - 1].samples[5 + i];
+                        }
+                    }
                 }
                 nextBtn.disabled = false;
             }
@@ -67,6 +87,21 @@ async function doLandingPage() {
         function rbClick(event) {
             console.log(event.target.value);
             session = event.target.value;
+            if (typeof participantId === "number" && participantId > 0 && participantId <= 120) {
+                sampleData = (session === "1") ? globalsampleData[participantId - 1].samples.slice(0, 5) : globalsampleData[participantId - 1].samples.slice(5);
+                console.log(sampleData);
+                idTh.innerHTML = participantId;
+                if (session) {
+                    for (let i = 0; i < tds.length; i++) {
+                        if (session === "1") {
+                            tds[i].innerHTML = globalsampleData[participantId - 1].samples[i];
+                        }
+                        else {
+                            tds[i].innerHTML = globalsampleData[participantId - 1].samples[5 + i];
+                        }
+                    }
+                }
+            }
             nextBtn.disabled = !(participantId && session);
         }
 
@@ -79,8 +114,6 @@ async function doLandingPage() {
         Utility.fadeIn(page)
             .then(() => input.focus());
     });
-
-
 }
 
 function doWelcomePage() {
@@ -101,6 +134,12 @@ function doWelcomePage() {
         nextBtn.addEventListener("click", nextBtnClick);
         Utility.fadeIn(page);
     });
+}
+
+function doGoodbyePage() {
+    const page = document.getElementById("goodbye-page");
+    Utility.hideJumbos();
+    Utility.fadeIn(page);
 }
 
 function doPracticeCompletedPage() {
@@ -147,16 +186,14 @@ async function run() {
     console.log("Running.");
     initialise();
 
-    //await doLandingPage();
-    await doPracticeCompletedPage();
-    await Product.doProduct({ sampleCode: 345 });
-    await Product.doProduct({ sampleCode: 123 });
-    
-    /* await doWelcomePage();
+    await doLandingPage();
+    await doWelcomePage();
     await Calibration.doCalibrationTask();
     await FalsePositives.doFalsePositiveTask(falsePositiveData);
     await doPracticeCompletedPage();
-    await Product.doProduct(); */
+    await Product.doProduct({ sampleCode: sampleData[0], session });
+    await Product.doProduct({ sampleCode: sampleData[1], session });
+    doGoodbyePage();
 
     console.log("Done.");
 }
