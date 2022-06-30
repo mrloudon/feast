@@ -2,7 +2,6 @@ import * as Utility from "./utility.js";
 import * as Calibration from "./calibration.js";
 import * as FalsePositives from "./falsePositive.js";
 import * as Product from "./product.js";
-import { loadCataData } from "./cata.js";
 
 const bodyKeys = {
     keyX: false,
@@ -11,7 +10,6 @@ const bodyKeys = {
 
 let session = false;
 let participantId = false;
-//let cataData;
 let falsePositiveData;
 let globalsampleData;
 let sampleData;
@@ -40,8 +38,7 @@ async function doLandingPage() {
     session = false;
     participantId = false;
     globalsampleData = await loadGlobalSampleData();
-    //cataData = await loadCataData();
-
+    
     return new Promise(function (resolve) {
 
         async function nextBtnClick() {
@@ -187,16 +184,16 @@ async function run() {
     initialise();
 
     await doLandingPage();
-    await doWelcomePage();
+   /*  await doWelcomePage();
     await Calibration.doCalibrationTask();
     await FalsePositives.doFalsePositiveTask(falsePositiveData);
-    await doPracticeCompletedPage();
-    await Product.doProduct({ sampleCode: sampleData[0], session });
-    await Product.doProduct({ sampleCode: sampleData[1], session });
+    await doPracticeCompletedPage(); */
+    await Product.doProduct({ sampleCode: sampleData[0] });
+    await Product.doProduct({ sampleCode: sampleData[1] });
     doGoodbyePage();
 
     console.log("Done.");
 }
 
-console.log("FEAST V1");
+console.log("FEAST V3");
 Utility.ready(run);

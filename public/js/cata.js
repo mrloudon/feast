@@ -1,6 +1,6 @@
 import * as Utility from "./utility.js";
 
-let cataData, indx, sample;
+let cataData, index, sample;
 
 const headers = [
     `<ol>
@@ -13,13 +13,61 @@ const headers = [
     </ol>`
 ];
 
+const emotionWords = [
+    "Adventurous",
+    "Boring",
+    "Cheap",
+    "Classy",
+    "Comforting",
+    "Energetic",
+    "Feminine",
+    "Genuine",
+    "Happy",
+    "Inspiring",
+    "Irritating",
+    "Masculine",
+    "Modern",
+    "Pretentious",
+    "Relaxing",
+    "Sensual",
+    "Simple",
+    "Sophisticated",
+    "Traditional",
+    "Uninspiring"
+];
+
+const sensoryWords = [
+    "Pretentious",
+    "Relaxing",
+    "Sensual",
+    "Simple",
+    "Sophisticated",
+    "Traditional",
+    "Uninspiring",
+    "Adventurous",
+    "Boring",
+    "Cheap",
+    "Classy",
+    "Comforting",
+    "Energetic",
+    "Feminine",
+    "Genuine",
+    "Happy",
+    "Inspiring",
+    "Irritating",
+    "Masculine",
+    "Modern"
+];
+
+const stimWords = [emotionWords, sensoryWords];
+
 function doResponsePage() {
     return new Promise(function (resolve) {
         const page = document.getElementById("cata-response-page");
         const buttons = page.querySelectorAll(".text-scale-item");
         const nextBtn = page.querySelector(".next-btn");
 
-        page.querySelector(".cata-header-div").innerHTML = headers[indx];
+        page.querySelector(".cata-header-div").innerHTML = headers[index];
         page.querySelector(".sample-span").innerHTML = sample;
 
         function buttonClick(evt) {
@@ -56,20 +104,20 @@ function doResponsePage() {
         for (let i = 0; i < buttons.length; i++) {
             buttons[i].classList.remove("btn-success");
             buttons[i].classList.add("btn-danger");
-            buttons[i].innerHTML = cataData[indx].cata[i];
+            buttons[i].innerHTML = stimWords[index][parseInt(cataData[index].cata[i], 10) - 1];
             buttons[i].checked = false;
             buttons[i].addEventListener("click", buttonClick);
         }
 
         nextBtn.addEventListener("click", nextBtnClick);
         Utility.fadeIn(page);
-        console.log(cataData[indx]);
+        console.log(cataData[index]);
     });
 }
 
-function doCataTask({ session, sampleCode }) {
+function doCataTask({ headerIndex, sampleCode }) {
     sample = sampleCode;
-    indx = (session === "1") ? 0 : 1;
+    index = headerIndex;
     return doResponsePage();
 }
 
@@ -77,7 +125,6 @@ async function loadCataData() {
     const cataStream = await fetch("cata");
     cataData = await cataStream.json();
     console.log("CATA data loaded.");
-    return cataData;
 }
 
 export { doCataTask, loadCataData };
