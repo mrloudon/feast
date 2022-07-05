@@ -10,6 +10,7 @@ const bodyKeys = {
 
 let session = false;
 let participantId = false;
+let sequence = false;
 let falsePositiveData;
 let globalsampleData;
 let sampleData;
@@ -33,10 +34,13 @@ async function doLandingPage() {
     const nextBtn = page.querySelector("button.next-btn");
     const tds = page.querySelectorAll("td");
     const idTh = page.querySelector(".table-id");
-    const rbs = page.querySelectorAll(".form-check-input");
+    const sessionRBs = page.querySelectorAll(".form-check-input[name='session-radio']");
+    const sequenceRBs = page.querySelectorAll(".form-check-input[name='sequence-radio']");
 
     session = false;
     participantId = false;
+    sequence = false;
+
     globalsampleData = await loadGlobalSampleData();
     
     return new Promise(function (resolve) {
@@ -47,13 +51,14 @@ async function doLandingPage() {
             console.log(falsePositiveData);
 
             nextBtn.removeEventListener("click", nextBtnClick);
-            input.removeEventListener("input", inputChange);
-            rbs.forEach(rb => rb.removeEventListener("click", rbClick));
+            input.removeEventListener("input", participantInputChange);
+            sessionRBs.forEach(rb => rb.removeEventListener("click", sessionRBClick));
+            sequenceRBs.forEach(rb => rb.removeEventListener("click", sequenceRBClick));
             Utility.fadeOut(page)
                 .then(resolve);
         }
 
-        function inputChange() {
+        function participantInputChange() {
             participantId = parseInt(input.value, 10);
             if (typeof participantId === "number" && participantId > 0 && participantId <= 120) {
                 idTh.innerHTML = participantId;
@@ -78,10 +83,10 @@ async function doLandingPage() {
                 tds.forEach(t => t.innerHTML = "&mdash;");
                 nextBtn.disabled = true;
             }
-            nextBtn.disabled = !(participantId && session);
+            nextBtn.disabled = !(participantId && session && sequence);
         }
 
-        function rbClick(event) {
+        function sessionRBClick(event) {
             console.log(event.target.value);
             session = event.target.value;
             if (typeof participantId === "number" && participantId > 0 && participantId <= 120) {
@@ -99,12 +104,19 @@ async function doLandingPage() {
                     }
                 }
             }
-            nextBtn.disabled = !(participantId && session);
+            nextBtn.disabled = !(participantId && session && sequence);
         }
 
-        input.addEventListener("input", inputChange);
+        function sequenceRBClick(event){
+            console.log(event.target.value);
+            sequence = event.target.value;
+            nextBtn.disabled = !(participantId && session && sequence);
+        }
+
+        input.addEventListener("input", participantInputChange);
         nextBtn.addEventListener("click", nextBtnClick);
-        rbs.forEach(rb => rb.addEventListener("click", rbClick));
+        sessionRBs.forEach(rb => rb.addEventListener("click", sessionRBClick));
+        sequenceRBs.forEach(rb => rb.addEventListener("click", sequenceRBClick));
 
         nextBtn.disabled = true;
 
@@ -184,12 +196,12 @@ async function run() {
     initialise();
 
     await doLandingPage();
-   /*  await doWelcomePage();
-    await Calibration.doCalibrationTask();
-    await FalsePositives.doFalsePositiveTask(falsePositiveData);
-    await doPracticeCompletedPage(); */
-    await Product.doProduct({ sampleCode: sampleData[0] });
-    await Product.doProduct({ sampleCode: sampleData[1] });
+    await doWelcomePage();
+    //await Calibration.doCalibrationTask();
+    //await FalsePositives.doFalsePositiveTask(falsePositiveData);
+    await doPracticeCompletedPage();
+    await Product.doProduct({ sampleCode: sampleData[0], sequence });
+    await Product.doProduct({ sampleCode: sampleData[1], sequence });
     doGoodbyePage();
 
     console.log("Done.");

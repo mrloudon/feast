@@ -70,9 +70,17 @@ function doResponsePage() {
         page.querySelector(".cata-header-div").innerHTML = headers[index];
         page.querySelector(".sample-span").innerHTML = sample;
 
+        function noSelectionMade() {
+            for (let btn of buttons) {
+                if (btn.checked) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         function buttonClick(evt) {
             evt.currentTarget.checked = !evt.currentTarget.checked;
-            console.log(evt.currentTarget.checked);
             if (evt.currentTarget.checked) {
                 evt.currentTarget.classList.add("btn-success");
                 evt.currentTarget.classList.remove("btn-danger");
@@ -81,6 +89,7 @@ function doResponsePage() {
                 evt.currentTarget.classList.add("btn-danger");
                 evt.currentTarget.classList.remove("btn-success");
             }
+            nextBtn.disabled = noSelectionMade();
         }
 
         function removeListeners() {
@@ -109,6 +118,7 @@ function doResponsePage() {
             buttons[i].addEventListener("click", buttonClick);
         }
 
+        nextBtn.disabled = true;
         nextBtn.addEventListener("click", nextBtnClick);
         Utility.fadeIn(page);
         console.log(cataData[index]);

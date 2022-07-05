@@ -34,12 +34,22 @@ function doLikingScalePage({ sampleCode }) {
     });
 }
 
-async function doProduct({ sampleCode }) {
-    //const choice = await doLikingScalePage({ sampleCode });
-    //console.log(choice);
+async function doProduct({ sampleCode, sequence }) {
+    if(sequence !== "1" && sequence !== "2"){
+        throw "Invalid CATA/Intension sequence.";
+    }
+    const choice = await doLikingScalePage({ sampleCode });
+    console.log(choice);
     await Cata.loadCataData();
-    //await Intension.doIntensionTask({ sampleCode });
-    await Cata.doCataTask({ sampleCode, headerIndex: 0 });
+    if(sequence === "1"){
+        await Intension.doIntensionTask({ sampleCode });
+        await Cata.doCataTask({ sampleCode, headerIndex: 0 });
+    }
+    else {
+        await Cata.doCataTask({ sampleCode, headerIndex: 0 });
+        await Intension.doIntensionTask({ sampleCode });
+    }
+    
     await Cata.doCataTask({ sampleCode, headerIndex: 1 });
 }
 

@@ -31,27 +31,39 @@
             <div class="m-5 text-center">
                 <h1 class="display-6 my-5">HCD Setup</h1>
                 <div class="row">
-                    <div class="col">
-
-                    </div>
-
                     <div class="col input-group">
                         <span class="input-group-text">Participant ID</span>
                         <input type="number" min="1" max="120" autofocus>
                     </div>
                     <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="session-radio-1" id="session-radio-1"
+                        <div class="form-check text-start">
+                            <input class="form-check-input" type="radio" name="session-radio" id="session-radio-1"
                                 value="1">
                             <label class="form-check-label" for="session-radio-1">
                                 Session 1
                             </label>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="session-radio-1" id="session-radio-2"
+                        <div class="form-check text-start">
+                            <input class="form-check-input" type="radio" name="session-radio" id="session-radio-2"
                                 value="2">
                             <label class="form-check-label" for="session-radio-2">
                                 Session 2
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-check text-start">
+                            <input class="form-check-input" type="radio" name="sequence-radio" id="sequence-radio-1"
+                                value="1">
+                            <label class="form-check-label" for="sequence-radio-1">
+                                Intension &rarr; CATA
+                            </label>
+                        </div>
+                        <div class="form-check text-start">
+                            <input class="form-check-input" type="radio" name="sequence-radio" id="sequence-radio-2"
+                                value="2">
+                            <label class="form-check-label" for="sequence-radio-2">
+                                CATA &rarr; Intension
                             </label>
                         </div>
                     </div>
@@ -495,8 +507,8 @@
         <div class="page-content" id="cata-response-page">
             <div class="cata-header-div py-2 px-4"></div>
             <div class="row px-4">
-                <button class="col btn  text-scale-item mx-2 my-1"></button>
-                <button class="col btn  text-scale-item mx-2 my-1"></button>
+                <button class="col btn text-scale-item mx-2 my-1"></button>
+                <button class="col btn text-scale-item mx-2 my-1"></button>
                 <button class="col btn  text-scale-item mx-2 my-1"></button>
             </div>
             <div class="row px-4">
