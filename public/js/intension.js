@@ -2,11 +2,11 @@ import * as Utility from "./utility.js";
 
 const emotionWords = [
     "Adventurous",
-    "Boring",
+    "Bored",
     "Cheap",
     "Classy",
-    "Comforting",
-    "Energetic",
+    "Comforted",
+    "Energised",
     "Feminine",
     "Genuine",
     "Happy",
@@ -15,7 +15,7 @@ const emotionWords = [
     "Masculine",
     "Modern",
     "Pretentious",
-    "Relaxing",
+    "Relaxed",
     "Sensual",
     "Simple",
     "Sophisticated",
