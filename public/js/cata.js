@@ -1,6 +1,6 @@
 import * as Utility from "./utility.js";
 
-let cataData, index, sample;
+let cataDataIndices, index, sample;
 
 const headers = [
     `<ol>
@@ -23,8 +23,8 @@ const emotionWords = [
     "Feminine",
     "Genuine",
     "Happy",
-    "Inspiring",
-    "Irritating",
+    "Inspired",
+    "Irritated",
     "Masculine",
     "Modern",
     "Pretentious",
@@ -33,35 +33,40 @@ const emotionWords = [
     "Simple",
     "Sophisticated",
     "Traditional",
-    "Uninspiring"
+    "Uninspired"
 ];
 
 const sensoryWords = [
-    "Pretentious",
-    "Relaxing",
-    "Sensual",
-    "Simple",
-    "Sophisticated",
-    "Traditional",
-    "Uninspiring",
-    "Adventurous",
-    "Boring",
-    "Cheap",
-    "Classy",
-    "Comforting",
-    "Energetic",
-    "Feminine",
-    "Genuine",
-    "Happy",
-    "Inspiring",
-    "Irritating",
-    "Masculine",
-    "Modern"
+    "Bean-like flavour",
+    "Cardboard-like",
+    "Creamy mouthfeel",
+    "Grain/wheat flavour",
+    "Milk-like flavour",
+    "Nutty flavour",
+    "Oaty/cereal flavour",
+    "Rice flavour",
+    "Strong flavour",
+    "Sweet taste",
+    "Thick/viscous",
+    "Thin/watery",
+    "Weak/bland flavour",
+    "White appearance",
+    "Earthy",
+    "Hay-like",
+    "Roasty",
+    "Salty",
+    "Bitter",
+    "Metallic",
+    "Umami",
+    "Astringent"
 ];
 
 const stimWords = [emotionWords, sensoryWords];
 
 function doResponsePage() {
+
+    const cataWordList = stimWords[index];
+
     return new Promise(function (resolve) {
         const page = document.getElementById("cata-response-page");
         const buttons = page.querySelectorAll(".text-scale-item");
@@ -101,40 +106,41 @@ function doResponsePage() {
             let result = ",";
             buttons.forEach(btn => {
                 if (btn.checked) {
-                    result += `${btn.innerHTML} `;
+                    result += `${btn.innerHTML};`;
                 }
             });
             removeListeners();
+            result = result.slice(0, -1);
             console.log(result);
             Utility.fadeOut(page)
                 .then(() => resolve(result));
         }
 
-        for (let i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove("btn-success");
-            buttons[i].classList.add("btn-danger");
-            buttons[i].innerHTML = stimWords[index][parseInt(cataData[index].cata[i], 10) - 1];
-            buttons[i].checked = false;
-            buttons[i].addEventListener("click", buttonClick);
+        buttons.forEach(btn => {
+            btn.classList.add("invisible");
+            btn.addEventListener("click", buttonClick);
+            btn.checked = false;
+            btn.classList.remove("btn-success");
+            btn.classList.add("btn-danger");
+        });
+
+        for (let i = 0; i < cataDataIndices.cata.length; i++) {
+            buttons[i].classList.remove("invisible");
+            buttons[i].innerHTML = cataWordList[parseInt(cataDataIndices.cata[i], 10) - 1];
         }
 
         nextBtn.disabled = true;
         nextBtn.addEventListener("click", nextBtnClick);
         Utility.fadeIn(page);
-        console.log(cataData[index]);
     });
 }
 
-function doCataTask({ headerIndex, sampleCode }) {
+function doCataTask({ headerIndex, sampleCode, cataData }) {
+    cataDataIndices = cataData;
+    console.log(cataDataIndices);
     sample = sampleCode;
     index = headerIndex;
     return doResponsePage();
 }
 
-async function loadCataData() {
-    const cataStream = await fetch("cata");
-    cataData = await cataStream.json();
-    console.log("CATA data loaded.");
-}
-
-export { doCataTask, loadCataData };
+export { doCataTask };

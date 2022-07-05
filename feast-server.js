@@ -10,7 +10,7 @@ const DEMO_OUTPUT_FILE = "./public/ChSgHo1TwE.csv";
 
 const app = express();
 const port = 8010
-let cataData, falsePositiveData, sampleData;
+let emotionCataData, sensoryCataData, falsePositiveData, sampleData;
 
 function constructPilotCSVHeader() {
     //const words = ["Satisfied", "Comforted", "Happy", "Indulgent", "Pleasant", "Nostalgic", "Bored", "Disappointed", "Disgusted", "Relaxed", "Uncomfortable", "Delight"];
@@ -71,7 +71,7 @@ function readSampleData() {
 }
 
 
-function readCataData() {
+function readCataData(fName) {
     const cataData = [];
     let first = true;
     let arr;
@@ -80,7 +80,7 @@ function readCataData() {
 
         try {
             const rl = readline.createInterface({
-                input: fs.createReadStream("CATAdesign.csv"),
+                input: fs.createReadStream(fName),
                 crlfDelay: Infinity
             });
 
@@ -152,8 +152,26 @@ app.get("/hi", (req, res) => {
     res.send('Hello World!');
 });
 
-app.get("/cata", (req, resp) => {
-    resp.send(cataData);
+app.get("/emotionCata", (req, resp) => {
+    const id = parseInt(req.query.id, 10);
+    if(!isNaN(id) && id >= 0 && id < (sampleData.length + 1)){
+        resp.send(emotionCataData[id - 1]);
+    }
+    else{
+        resp.statusMessage = `Bad ID: ${id}`;
+        resp.status(400).end();
+    }
+});
+
+app.get("/sensoryCata", (req, resp) => {
+    const id = parseInt(req.query.id, 10);
+    if(!isNaN(id) && id >= 0 && id < (sampleData.length + 1)){
+        resp.send(sensoryCataData[id - 1]);
+    }
+    else{
+        resp.statusMessage = `Bad ID: ${id}`;
+        resp.status(400).end();
+    }
 });
 
 app.get("/samples", (req, resp) => {
@@ -166,7 +184,7 @@ app.get("/falsePositives", (req, resp) => {
         resp.send([falsePositiveData[id * 2 - 2], falsePositiveData[id * 2 - 1]]);
     }
     else{
-        resp.statusMessage = "Bad ID";
+        resp.statusMessage = `Bad ID: ${id}`;
         resp.status(400).end();
     }
 });
@@ -231,7 +249,8 @@ app.post(["/submitPilot", "/feast/submitPilot"], (req, resp) => {
 (async () => {
     try {
         sampleData = await readSampleData();
-        cataData = await readCataData();
+        emotionCataData = await readCataData("emotion_cata_1.csv");
+        sensoryCataData = await readCataData("sensory_cata_1.csv");
         falsePositiveData = await readFalsePositiveData();
         app.listen(port, () => {
             console.log(`Feast server listening locally at http://localhost:${port}`)

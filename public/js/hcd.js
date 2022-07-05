@@ -12,6 +12,8 @@ let session = false;
 let participantId = false;
 let sequence = false;
 let falsePositiveData;
+let emotionCataData;
+let sensoryCataData;
 let globalsampleData;
 let sampleData;
 
@@ -20,6 +22,18 @@ async function loadGlobalSampleData() {
     const data = await sampleStream.json();
     console.log("Sample data loaded.");
     return data;
+}
+
+async function loadEmotionCataData() {
+    const emotionCataStream = await fetch(`emotionCata?id=${participantId}`);
+    emotionCataData = await emotionCataStream.json();
+    console.log("Emotion CATA data loaded.");
+}
+
+async function loadSensoryCataData() {
+    const sensoryCataStream = await fetch(`sensoryCata?id=${participantId}`);
+    sensoryCataData = await sensoryCataStream.json();
+    console.log("Sensory CATA data loaded.");
 }
 
 async function loadFalsePositiveData() {
@@ -48,7 +62,8 @@ async function doLandingPage() {
         async function nextBtnClick() {
             console.log(participantId);
             await loadFalsePositiveData();
-            console.log(falsePositiveData);
+            await loadEmotionCataData();
+            await loadSensoryCataData();
 
             nextBtn.removeEventListener("click", nextBtnClick);
             input.removeEventListener("input", participantInputChange);
@@ -200,12 +215,12 @@ async function run() {
     //await Calibration.doCalibrationTask();
     //await FalsePositives.doFalsePositiveTask(falsePositiveData);
     await doPracticeCompletedPage();
-    await Product.doProduct({ sampleCode: sampleData[0], sequence });
-    await Product.doProduct({ sampleCode: sampleData[1], sequence });
+    await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData});
+    await Product.doProduct({ sampleCode: sampleData[1], sequence, emotionCataData, sensoryCataData });
     doGoodbyePage();
 
     console.log("Done.");
 }
 
-console.log("FEAST V3");
+console.log("FEAST HCD");
 Utility.ready(run);
