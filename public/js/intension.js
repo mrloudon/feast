@@ -10,8 +10,8 @@ const emotionWords = [
     "Feminine",
     "Genuine",
     "Happy",
-    "Inspiring",
-    "Irritating",
+    "Inspired",
+    "Irritated",
     "Masculine",
     "Modern",
     "Pretentious",
@@ -20,7 +20,7 @@ const emotionWords = [
     "Simple",
     "Sophisticated",
     "Traditional",
-    "Uninspiring"
+    "Uninspired"
 ];
 
 
