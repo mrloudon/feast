@@ -1,6 +1,6 @@
 import * as Utility from "./utility.js";
 
-const emotionWords = [
+/* const emotionWords = [
     "Adventurous",
     "Bored",
     "Cheap",
@@ -21,9 +21,9 @@ const emotionWords = [
     "Sophisticated",
     "Traditional",
     "Uninspired"
-];
+]; */
 
-
+const emotionWords = Utility.emotionWords;
 
 function doIntensionInstructions1Page() {
     return new Promise(function (resolve) {

@@ -120,6 +120,29 @@ function showJumbos() {
     document.querySelectorAll(".jumbotron").forEach(jumbo => jumbo.style.display = "block");
 }
 
+const emotionWords = [
+    "Adventurous",
+    "Bored",
+    "Cheap",
+    "Classy",
+    "Comforted",
+    "Energised",
+    "Feminine",
+    "Genuine",
+    "Happy",
+    "Inspired",
+    "Irritated",
+    "Masculine",
+    "Modern",
+    "Pretentious",
+    "Relaxed",
+    "Sensual",
+    "Simple",
+    "Sophisticated",
+    "Traditional",
+    "Uninspired"
+];
+
 export {
     fadeIn,
     fadeOut,
@@ -130,5 +153,6 @@ export {
     wait,
     shuffleArray,
     hideJumbos,
-    showJumbos
+    showJumbos,
+    emotionWords
 };

@@ -13,9 +13,11 @@ const headers = [
     </ol>`
 ];
 
-const emotionWords = [
+const emotionWords = Utility.emotionWords;
+
+/* const emotionWords = [
     "Adventurous",
-    "Boring",
+    "Bored",
     "Cheap",
     "Classy",
     "Comforted",
@@ -34,7 +36,7 @@ const emotionWords = [
     "Sophisticated",
     "Traditional",
     "Uninspired"
-];
+]; */
 
 const sensoryWords = [
     "Bean-like flavour",
