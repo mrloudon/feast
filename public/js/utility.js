@@ -120,6 +120,16 @@ function showJumbos() {
     document.querySelectorAll(".jumbotron").forEach(jumbo => jumbo.style.display = "block");
 }
 
+function meanStdev(arr) {
+    const n = arr.length;
+    if (n === 0) {
+        return { mean: 0, stdev: 0 };
+    }
+    const mean = arr.reduce((a, b) => a + b) / n;
+    const stdev = Math.sqrt(arr.map(x => Math.pow(x - mean, 2)).reduce((a, b) => a + b) / n);
+    return { mean, stdev };
+}
+
 const emotionWords = [
     "Adventurous",
     "Bored",
@@ -154,5 +164,6 @@ export {
     shuffleArray,
     hideJumbos,
     showJumbos,
+    meanStdev,
     emotionWords
 };

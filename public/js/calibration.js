@@ -39,9 +39,9 @@ function doPracticeTask1Instructions2Page() {
 
 function doReactionTimePage() {
     const N_TRIALS = 10;
-    // const MIN_ITI = 800;
-    // const MAX_ITI = 1200
-    const ITI = 500;
+    const MIN_ITI = 400;
+    const MAX_ITI = 1000
+    const ITI = 1500;
     const MAX_RT = 3000;
 
     const page = document.getElementById("reaction-time-page");
@@ -53,22 +53,28 @@ function doReactionTimePage() {
         let currentTrial = 0;
         let tooSlowTimer;
         let tooSlow = false;
+        let csv;
         let rts = [], startTime;
 
         function getITI() {
-            //return Math.floor(Math.random() * (MAX_ITI - MIN_ITI) + MIN_ITI);
-            return ITI;
+            return Math.floor(Math.random() * (MAX_ITI - MIN_ITI) + MIN_ITI);
+            //return ITI;
         }
 
         function showStimulus() {
             setTimeout(() => {
                 console.log(currentTrial);
                 if (currentTrial === N_TRIALS) {
-                    console.log(rts);
-                    console.log(rts.length);
+                    let stats = Utility.meanStdev(rts);
+                    let str = "";
+
+                    rts.forEach(rt => str += `${rt};`);
+                    str = str.slice(0, -1);
+                    csv = `,${str},${Math.round(stats.mean)},${Math.round(stats.stdev)}`;
+                    console.log("Calibration CSV:", csv);
                     document.body.removeEventListener("keydown", keyDown);
                     Utility.fadeOut(page)
-                        .then(resolve);
+                        .then(() => resolve(csv));
                     return;
                 }
                 currentTrial++;
@@ -112,7 +118,7 @@ function doReactionTimePage() {
 
         Utility.fadeIn(page)
             .then(() => {
-                setTimeout(showStimulus, MAX_RT - ITI);
+                setTimeout(showStimulus, ITI);
             });
     });
 }

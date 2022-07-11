@@ -88,7 +88,7 @@ function doIntensionInstructions3Page({ sampleCode }) {
 
 function doIntensionTaskPage() {
     return new Promise(function (resolve) {
-        const onTime = 2000;
+        const onTime = 1000;
         const offTime = 500;
         const page = document.getElementById("intension-stimulus-page");
         const intensionWord = page.querySelector(".intension-word");

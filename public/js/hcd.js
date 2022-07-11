@@ -56,7 +56,7 @@ async function doLandingPage() {
     sequence = false;
 
     globalsampleData = await loadGlobalSampleData();
-    
+
     return new Promise(function (resolve) {
 
         async function nextBtnClick() {
@@ -122,7 +122,7 @@ async function doLandingPage() {
             nextBtn.disabled = !(participantId && session && sequence);
         }
 
-        function sequenceRBClick(event){
+        function sequenceRBClick(event) {
             console.log(event.target.value);
             sequence = event.target.value;
             nextBtn.disabled = !(participantId && session && sequence);
@@ -208,14 +208,17 @@ async function run() {
     }
 
     console.log("Running.");
+
+    console.log(Utility.meanStdev([1, 2, 3, 4, 5]));
+
     initialise();
 
     await doLandingPage();
     await doWelcomePage();
-    //await Calibration.doCalibrationTask();
+    await Calibration.doCalibrationTask();
     //await FalsePositives.doFalsePositiveTask(falsePositiveData);
     await doPracticeCompletedPage();
-    await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData});
+    await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData });
     await Product.doProduct({ sampleCode: sampleData[1], sequence, emotionCataData, sensoryCataData });
     doGoodbyePage();
 
