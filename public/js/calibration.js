@@ -41,7 +41,7 @@ function doReactionTimePage() {
     const N_TRIALS = 10;
     //const MIN_ITI = 400;
     //const MAX_ITI = 1000;
-    const ITI = 1500;
+    const ITI = 1000;
     const MAX_RT = 3000;
 
     const ITIS = [673, 584, 400, 996, 514, 650, 760, 943, 572, 841, 741, 553, 743, 931,
