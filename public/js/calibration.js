@@ -39,10 +39,13 @@ function doPracticeTask1Instructions2Page() {
 
 function doReactionTimePage() {
     const N_TRIALS = 10;
-    const MIN_ITI = 400;
-    const MAX_ITI = 1000
+    //const MIN_ITI = 400;
+    //const MAX_ITI = 1000;
     const ITI = 1500;
     const MAX_RT = 3000;
+
+    const ITIS = [673, 584, 400, 996, 514, 650, 760, 943, 572, 841, 741, 553, 743, 931,
+        627, 480, 668, 461, 956, 426];
 
     const page = document.getElementById("reaction-time-page");
     const stimulus = page.querySelector(".stimulus");
@@ -57,7 +60,8 @@ function doReactionTimePage() {
         let rts = [], startTime;
 
         function getITI() {
-            return Math.floor(Math.random() * (MAX_ITI - MIN_ITI) + MIN_ITI);
+            return ITIS[currentTrial];
+            //return Math.floor(Math.random() * (MAX_ITI - MIN_ITI) + MIN_ITI);
             //return ITI;
         }
 

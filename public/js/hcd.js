@@ -178,6 +178,7 @@ function doPracticeCompletedPage() {
         }
 
         nextBtn.addEventListener("click", nextBtnClick);
+        Utility.showJumbos();
         Utility.fadeIn(page);
     });
 }
