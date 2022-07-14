@@ -217,7 +217,7 @@ async function run() {
     await doLandingPage();
     await doWelcomePage();
     await Calibration.doCalibrationTask();
-    //await FalsePositives.doFalsePositiveTask(falsePositiveData);
+    await FalsePositives.doFalsePositiveTask(falsePositiveData);
     await doPracticeCompletedPage();
     await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData });
     await Product.doProduct({ sampleCode: sampleData[1], sequence, emotionCataData, sensoryCataData });
