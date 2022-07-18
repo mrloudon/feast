@@ -50,6 +50,7 @@ async function doLandingPage() {
     const idTh = page.querySelector(".table-id");
     const sessionRBs = page.querySelectorAll(".form-check-input[name='session-radio']");
     const sequenceRBs = page.querySelectorAll(".form-check-input[name='sequence-radio']");
+    let csv = "";
 
     session = false;
     participantId = false;
@@ -69,8 +70,10 @@ async function doLandingPage() {
             input.removeEventListener("input", participantInputChange);
             sessionRBs.forEach(rb => rb.removeEventListener("click", sessionRBClick));
             sequenceRBs.forEach(rb => rb.removeEventListener("click", sequenceRBClick));
+            csv += `${participantId},${session},${sequence}`;
+            sampleData.forEach(sample => csv += `,${sample}`);
             Utility.fadeOut(page)
-                .then(resolve);
+                .then(() => resolve(csv));
         }
 
         function participantInputChange() {
@@ -184,6 +187,7 @@ function doPracticeCompletedPage() {
 }
 
 async function run() {
+    let csv = "";
 
     function initialise() {
         document.body.style.overflow = "hidden";
@@ -209,18 +213,20 @@ async function run() {
     }
 
     console.log("Running.");
-
-    console.log(Utility.meanStdev([1, 2, 3, 4, 5]));
-
     initialise();
 
-    await doLandingPage();
+    csv += await doLandingPage();
     await doWelcomePage();
-    await Calibration.doCalibrationTask();
-    await FalsePositives.doFalsePositiveTask(falsePositiveData);
+    /* csv += await Calibration.doCalibrationTask();
+    console.log(csv);
+    csv += await FalsePositives.doFalsePositiveTask(falsePositiveData);
+    console.log(csv); */
     await doPracticeCompletedPage();
-    await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData });
-    await Product.doProduct({ sampleCode: sampleData[1], sequence, emotionCataData, sensoryCataData });
+    console.log(csv);
+    csv += await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData });
+    console.log(csv);
+    csv += await Product.doProduct({ sampleCode: sampleData[1], sequence, emotionCataData, sensoryCataData });
+    console.log(csv);
     doGoodbyePage();
 
     console.log("Done.");

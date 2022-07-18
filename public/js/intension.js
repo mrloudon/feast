@@ -93,15 +93,18 @@ function doIntensionTaskPage() {
         const page = document.getElementById("intension-stimulus-page");
         const intensionWord = page.querySelector(".intension-word");
 
-        let currentTrial = 0;
+        let currentTrial = -1;
         let acceptKeypresses = false;
         let onTimer = false;
+        let word;
+        let responses = "";
 
         function keyDown(evt) {
             if (acceptKeypresses && evt.keyCode === 32) {
                 evt.preventDefault();
                 evt.stopPropagation();
                 clearTimeout(onTimer);
+                responses += `${word} `;
                 nextTrial();
                 return false;
             }
@@ -110,13 +113,14 @@ function doIntensionTaskPage() {
         async function nextTrial() {
             intensionWord.classList.add("invisible");
             acceptKeypresses = false;
-            if (++currentTrial === 6) {
+            if (currentTrial++ === 5) {
                 document.body.removeEventListener("keydown", keyDown);
                 Utility.fadeOut(page)
-                    .then(resolve);
+                    .then(() => resolve(responses));
                 return;
             }
-            intensionWord.innerHTML = emotionWords[currentTrial];
+            word = emotionWords[currentTrial]
+            intensionWord.innerHTML = word;
             await Utility.wait(offTime);
             intensionWord.classList.remove("invisible");
             acceptKeypresses = true;
@@ -135,11 +139,13 @@ function doIntensionTaskPage() {
 }
 
 async function doIntensionTask({ sampleCode }) {
+    let csv;
     await doIntensionInstructions1Page();
     await doIntensionInstructions2Page();
     await doIntensionInstructions3Page({ sampleCode });
-    await doIntensionTaskPage();
+    csv = await doIntensionTaskPage();
     Utility.showJumbos();
+    return csv;
 }
 
 export { doIntensionTask };

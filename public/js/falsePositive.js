@@ -97,6 +97,10 @@ function doPracticeTask2(p) {
         let acceptKeyPresses = false;
         let threeSecondTimer;
         let currentWord;
+        let hits = 0;
+        let correctRejections = 0;
+        let misses = 0;
+        let falseAlarms = 0;
 
         params = p;
 
@@ -104,7 +108,7 @@ function doPracticeTask2(p) {
             console.log("Trials completed");
             document.removeEventListener("keydown", keyDown);
             Utility.fadeOut(page)
-                .then(resolve);
+                .then(() => resolve(`,${hits},${misses},${correctRejections},${falseAlarms}`));
         }
 
         function keyDown(evt) {
@@ -119,10 +123,12 @@ function doPracticeTask2(p) {
                 else {
                     window.clearTimeout(threeSecondTimer);
                     if (params.correct.includes(currentWord)) {
+                        hits++;
                         console.log("Hit");
                         wordDiv.innerHTML = "&nbsp;";
                     }
                     else {
+                        falseAlarms++;
                         console.log("False alarm");
                     }
                     if (currentTrial === N_TRIALS) {
@@ -152,11 +158,13 @@ function doPracticeTask2(p) {
                     return;
                 }
                 if (params.correct.includes(currentWord)) {
+                    misses++;
                     console.log("Miss");
                     missed = true;
                     warningDiv.classList.remove("invisible");
                 }
                 else {
+                    correctRejections++;
                     console.log("Correct rejection");
                     showStimulus();
                 }
@@ -182,17 +190,21 @@ function doFalsePositiveTaskPart1(p) {
 }
 
 async function doFalsePositiveTask(falsePositiveData) {
-    await doFalsePositiveTaskPart1({
+    let csv;
+
+    csv = await doFalsePositiveTaskPart1({
         words: falsePositiveData[0].words,
         correct: correctNumberWords,
         image: "img/numbers.png"
     });
     await doPracticeTask2Instructions4Page();
-    await doPracticeTask2({
+    csv += await doPracticeTask2({
         words: falsePositiveData[1].words,
         correct: correctSymbolWords,
         image: "img/symbols2.png"
     });
+    
+    return csv;
 }
 
 export { doFalsePositiveTask };

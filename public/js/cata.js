@@ -105,10 +105,10 @@ function doResponsePage() {
         }
 
         function nextBtnClick() {
-            let result = ",";
+            let result = "";
             buttons.forEach(btn => {
                 if (btn.checked) {
-                    result += `${btn.innerHTML};`;
+                    result += `${btn.innerHTML} `;
                 }
             });
             removeListeners();

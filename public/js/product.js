@@ -35,22 +35,27 @@ function doLikingScalePage({ sampleCode }) {
 }
 
 async function doProduct({ sampleCode, sequence, emotionCataData, sensoryCataData }) {
+    let csv, intensionCsv, emotionCataCsv, sensoryCataCsv;
     if(sequence !== "1" && sequence !== "2"){
         throw "Invalid CATA/Intension sequence.";
     }
     const choice = await doLikingScalePage({ sampleCode });
     console.log(choice);
+    
 
     if(sequence === "1"){
-        await Intension.doIntensionTask({ sampleCode });
-        await Cata.doCataTask({ sampleCode, headerIndex: 0, cataData: emotionCataData });
+        intensionCsv = await Intension.doIntensionTask({ sampleCode });
+        emotionCataCsv = await Cata.doCataTask({ sampleCode, headerIndex: 0, cataData: emotionCataData });
     }
     else {
-        await Cata.doCataTask({ sampleCode, headerIndex: 0, cataData: emotionCataData });
-        await Intension.doIntensionTask({ sampleCode });
+        emotionCataCsv = await Cata.doCataTask({ sampleCode, headerIndex: 0, cataData: emotionCataData });
+        intensionCsv = await Intension.doIntensionTask({ sampleCode });
     }
     
-    await Cata.doCataTask({ sampleCode, headerIndex: 1, cataData: sensoryCataData });
+    sensoryCataCsv = await Cata.doCataTask({ sampleCode, headerIndex: 1, cataData: sensoryCataData });
+
+    csv = `,${choice},${intensionCsv},${emotionCataCsv},${sensoryCataCsv}`;
+    return csv;
 }
 
 export { doProduct };

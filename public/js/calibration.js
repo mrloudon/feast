@@ -75,7 +75,7 @@ function doReactionTimePage() {
                     rts.forEach(rt => str += `${rt};`);
                     str = str.slice(0, -1);
                     csv = `,${str},${Math.round(stats.mean)},${Math.round(stats.stdev)}`;
-                    console.log("Calibration CSV:", csv);
+                    //console.log("Calibration CSV:", csv);
                     document.body.removeEventListener("keydown", keyDown);
                     Utility.fadeOut(page)
                         .then(() => resolve(csv));
@@ -128,9 +128,11 @@ function doReactionTimePage() {
 }
 
 async function doCalibrationTask() {
+    let csv;
     await doPracticeTask1Instructions1Page();
     await doPracticeTask1Instructions2Page();
-    await doReactionTimePage();
+    csv = await doReactionTimePage();
+    return csv;
 }
 
 export { doCalibrationTask };
