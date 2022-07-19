@@ -84,6 +84,7 @@ function doPracticeTask2Instructions4Page() {
 function doPracticeTask2(p) {
     const page = document.getElementById("practice-task-2-stimulus-page");
     const warningDiv = page.querySelector(".warning-div");
+    const warningMessage = page.querySelector(".warning-message");
     const img = page.querySelector("img");
     const wordDiv = page.querySelector(".word-div");
     const ITI_1 = 3000;
@@ -93,7 +94,7 @@ function doPracticeTask2(p) {
     return new Promise(function (resolve) {
 
         let currentTrial = 0;
-        let missed = false;
+        let previousResponseIncorrect = false;
         let acceptKeyPresses = false;
         let threeSecondTimer;
         let currentWord;
@@ -114,10 +115,11 @@ function doPracticeTask2(p) {
         function keyDown(evt) {
             if (acceptKeyPresses && evt.keyCode === 32) {
                 acceptKeyPresses = false;
-                if (missed) {
-                    console.log("Next trial after miss");
-                    missed = false;
+                if (previousResponseIncorrect) {
+                    console.log("Next trial after miss/false alarm");
+                    previousResponseIncorrect = false;
                     warningDiv.classList.add("invisible");
+                    warningMessage.innerHTML = "&nbsp;";
                     showStimulus();
                 }
                 else {
@@ -130,6 +132,13 @@ function doPracticeTask2(p) {
                     else {
                         falseAlarms++;
                         console.log("False alarm");
+                        warningMessage.innerHTML = "The word <strong>did not</strong> match the picture.";
+                        warningDiv.classList.remove("invisible");
+                        previousResponseIncorrect = true;
+                        setTimeout(() => acceptKeyPresses = true, 200);
+                        evt.preventDefault();
+                        evt.stopPropagation();
+                        return false;
                     }
                     if (currentTrial === N_TRIALS) {
                         endTask();
@@ -160,7 +169,8 @@ function doPracticeTask2(p) {
                 if (params.correct.includes(currentWord)) {
                     misses++;
                     console.log("Miss");
-                    missed = true;
+                    previousResponseIncorrect = true;
+                    warningMessage.innerHTML = "Please answer as quickly as possible. The word matched the picture.";
                     warningDiv.classList.remove("invisible");
                 }
                 else {
@@ -203,7 +213,7 @@ async function doFalsePositiveTask(falsePositiveData) {
         correct: correctSymbolWords,
         image: "img/symbols2.png"
     });
-    
+
     return csv;
 }
 
