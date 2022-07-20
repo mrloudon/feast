@@ -167,7 +167,7 @@ function doGoodbyePage() {
     const page = document.getElementById("goodbye-page");
     const heading = page.querySelector("h1");
 
-    headingTap(){
+    function headingTap(){
         heading.removeEventListener("click", headingTap);
         location.reload();
     }
