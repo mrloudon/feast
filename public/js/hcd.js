@@ -165,6 +165,14 @@ function doWelcomePage() {
 
 function doGoodbyePage() {
     const page = document.getElementById("goodbye-page");
+    const heading = page.querySelector("h1");
+
+    headingTap(){
+        heading.removeEventListener("click", headingTap);
+        location.reload();
+    }
+
+    heading.addEventListener("click", headingTap);
     Utility.hideJumbos();
     Utility.fadeIn(page);
 }
