@@ -224,9 +224,10 @@ async function run() {
     initialise();
 
     csv += await doLandingPage();
+    console.log(csv);
     await doWelcomePage();
-    //csv += await Calibration.doCalibrationTask();
-    //console.log(csv);
+    csv += await Calibration.doCalibrationTask();
+    console.log(csv);
     csv += await FalsePositives.doFalsePositiveTask(falsePositiveData);
     console.log(csv);
     await doPracticeCompletedPage();
@@ -235,6 +236,8 @@ async function run() {
     console.log(csv);
     csv += await Product.doProduct({ sampleCode: sampleData[1], sequence, emotionCataData, sensoryCataData });
     console.log(csv);
+    const reply = await Utility.postHcdCSV(csv);
+    console.log(reply);
     doGoodbyePage();
 
     console.log("Done.");

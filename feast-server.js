@@ -5,12 +5,23 @@ const fs = require("fs");
 const events = require("events");
 const readline = require("readline");
 
-const PILOT_OUTPUT_FILE = "./public/A3rgYo56weW.csv";
-const DEMO_OUTPUT_FILE = "./public/ChSgHo1TwE.csv";
+const PILOT_OUTPUT_FILE =   "./public/A3rgYo56weW.csv";
+const DEMO_OUTPUT_FILE =    "./public/ChSgHo1TwE.csv";
+const HCD_OUTPUT_FILE =     "./public/jWScUE44eR.csv";
 
 const app = express();
 const port = 8010
 let emotionCataData, sensoryCataData, falsePositiveData, sampleData;
+
+function constructHcdCSVHeader(){
+    let headerCSV = `"Date","Time","IP","ID","Session","Sequence","S1","S2","S3","S4","S5",`;
+    headerCSV += `"RTs","Mean","SD",`;
+    headerCSV += `"Hits","Misses","CR","FA","Hits","Misses","CR","FA",`;
+    headerCSV += `"Liking","Intension","Emotion CATA","Sensory CATA",`;
+    headerCSV += `"Liking","Intension","Emotion CATA","Sensory CATA"`;
+    headerCSV += "\n";
+    return headerCSV;
+} 
 
 function constructPilotCSVHeader() {
     //const words = ["Satisfied", "Comforted", "Happy", "Indulgent", "Pleasant", "Nostalgic", "Bored", "Disappointed", "Disgusted", "Relaxed", "Uncomfortable", "Delight"];
@@ -235,6 +246,35 @@ app.post(["/submitPilot", "/feast/submitPilot"], (req, resp) => {
                 console.log(csvHeader);
                 fs.writeFileSync(PILOT_OUTPUT_FILE, csvHeader);
                 fs.appendFile(PILOT_OUTPUT_FILE, csv, () => { });
+            }
+        });
+    }
+
+    writeCSV(`${dt.toLocaleString()},${ip},${req.body.csv}\n`);
+    resp
+        .status(200)
+        .contentType("text/plain")
+        .end("OK");
+});
+
+app.post(["/submitHCD", "/feast/submitHCD"], (req, resp) => {
+    const dt = new Date();
+    const ip = req.headers["x-forwarded-for"] || req.ip;
+
+    function writeCSV(csv) {
+        fs.stat(HCD_OUTPUT_FILE, function (err) {
+            if (err === null) {
+                fs.appendFile(HCD_OUTPUT_FILE, csv, (err) => {
+                    if (err) {
+                        console.log("Error writing HCD csv:", err);
+                    }
+                });
+            }
+            else {
+                const csvHeader = constructHcdCSVHeader();
+                console.log(csvHeader);
+                fs.writeFileSync(HCD_OUTPUT_FILE, csvHeader);
+                fs.appendFile(HCD_OUTPUT_FILE, csv, () => { });
             }
         });
     }

@@ -88,7 +88,23 @@ async function postPilotCSV(csv) {
         }
     });
     const text = await response.text();
-    console.log("Response:", text);
+    console.log("Pilot Response:", text);
+    return text;
+}
+
+async function postHcdCSV(csv) {
+    const data = {
+        csv
+    };
+    const response = await fetch("feast/submitHCD", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    });
+    const text = await response.text();
+    console.log("HCD Response:", text);
     return text;
 }
 
@@ -159,6 +175,7 @@ export {
     ready,
     postCSV,
     postPilotCSV,
+    postHcdCSV,
     sanatise,
     wait,
     shuffleArray,
