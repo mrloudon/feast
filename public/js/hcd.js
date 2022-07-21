@@ -226,8 +226,8 @@ async function run() {
     csv += await doLandingPage();
     console.log(csv);
     await doWelcomePage();
-    csv += await Calibration.doCalibrationTask();
-    console.log(csv);
+    //csv += await Calibration.doCalibrationTask();
+    //console.log(csv);
     csv += await FalsePositives.doFalsePositiveTask(falsePositiveData);
     console.log(csv);
     await doPracticeCompletedPage();

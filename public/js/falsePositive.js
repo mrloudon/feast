@@ -354,7 +354,7 @@ function doPracticeTask2(p) {
 
         document.addEventListener("keydown", keyDown);
         Utility.fadeIn(page)
-            .then(showStimulus);
+            .then(() => setTimeout(showStimulus, ITI_2));
     });
 }
 

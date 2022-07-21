@@ -17,8 +17,11 @@ function constructHcdCSVHeader(){
     let headerCSV = `"Date","Time","IP","ID","Session","Sequence","S1","S2","S3","S4","S5",`;
     headerCSV += `"RTs","Mean","SD",`;
     headerCSV += `"Hits","Misses","CR","FA","Hits","Misses","CR","FA",`;
-    headerCSV += `"Liking","Intension","Emotion CATA","Sensory CATA",`;
-    headerCSV += `"Liking","Intension","Emotion CATA","Sensory CATA"`;
+    headerCSV += `"Liking 1","Intension 1","Emotion CATA 1","Sensory CATA 1",`;
+    headerCSV += `"Liking 2","Intension 2","Emotion CATA 2","Sensory CATA 2",`;
+    headerCSV += `"Liking 3","Intension 3","Emotion CATA 3","Sensory CATA 3",`;
+    headerCSV += `"Liking 4","Intension 4","Emotion CATA 4","Sensory CATA 4",`;
+    headerCSV += `"Liking 5","Intension 5","Emotion CATA 5","Sensory CATA 5"`;
     headerCSV += "\n";
     return headerCSV;
 } 
