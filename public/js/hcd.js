@@ -234,15 +234,21 @@ async function run() {
     csv += await doLandingPage();
     console.log(csv);
     await doWelcomePage();
- /*    csv += await Calibration.doCalibrationTask();
+    csv += await Calibration.doCalibrationTask();
     console.log(csv);
     csv += await FalsePositives.doFalsePositiveTask(falsePositiveData);
-    console.log(csv); */
+    console.log(csv);
     await doPracticeCompletedPage();
     console.log(csv);
     csv += await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
     csv += await Product.doProduct({ sampleCode: sampleData[1], sequence, emotionCataData, sensoryCataData, intensionData });
+    console.log(csv);
+    csv += await Product.doProduct({ sampleCode: sampleData[2], sequence, emotionCataData, sensoryCataData, intensionData });
+    console.log(csv);
+    csv += await Product.doProduct({ sampleCode: sampleData[3], sequence, emotionCataData, sensoryCataData, intensionData });
+    console.log(csv);
+    csv += await Product.doProduct({ sampleCode: sampleData[4], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
     const reply = await Utility.postHcdCSV(csv);
     console.log(reply);

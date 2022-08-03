@@ -54,7 +54,7 @@ async function doProduct({ sampleCode, sequence, emotionCataData, sensoryCataDat
     
     sensoryCataCsv = await Cata.doCataTask({ sampleCode, headerIndex: 1, cataData: sensoryCataData });
 
-    csv = `,${choice},${intensionCsv},${emotionCataCsv},${sensoryCataCsv}`;
+    csv = `,${sampleCode},${choice},${intensionCsv},${emotionCataCsv},${sensoryCataCsv}`;
     return csv;
 }
 

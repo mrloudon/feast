@@ -14,14 +14,52 @@ const port = 8010
 let emotionCataData, sensoryCataData, falsePositiveData, sampleData, intensionData;
 
 function constructHcdCSVHeader(){
+
+    function makeIntensionCsvHeader(sampleNumber) {
+        const emotionWords = [
+            "Adventurous",
+            "Bored",
+            "Cheap",
+            "Classy",
+            "Comforted",
+            "Energised",
+            "Feminine",
+            "Genuine",
+            "Happy",
+            "Inspired",
+            "Irritated",
+            "Masculine",
+            "Modern",
+            "Pretentious",
+            "Relaxed",
+            "Sensual",
+            "Simple",
+            "Sophisticated",
+            "Traditional",
+            "Uninspired"
+        ];
+        let intensionCSV = "";
+        emotionWords.forEach(word => {
+            intensionCSV += `,${sampleNumber}-1 ${word},${sampleNumber}-2 ${word}`;
+        });
+    
+        return intensionCSV;
+    }
+
+    const intension1HeaderCSV = makeIntensionCsvHeader("1");
+    const intension2HeaderCSV = makeIntensionCsvHeader("2");
+    const intension3HeaderCSV = makeIntensionCsvHeader("3");
+    const intension4HeaderCSV = makeIntensionCsvHeader("4");
+    const intension5HeaderCSV = makeIntensionCsvHeader("5");
+
     let headerCSV = `"Date","Time","IP","ID","Session","Sequence","S1","S2","S3","S4","S5",`;
     headerCSV += `"RTs","Mean","SD",`;
     headerCSV += `"Hits","Misses","CR","FA","Hits","Misses","CR","FA",`;
-    headerCSV += `"Liking 1","Intension 1","Emotion CATA 1","Sensory CATA 1",`;
-    headerCSV += `"Liking 2","Intension 2","Emotion CATA 2","Sensory CATA 2",`;
-    headerCSV += `"Liking 3","Intension 3","Emotion CATA 3","Sensory CATA 3",`;
-    headerCSV += `"Liking 4","Intension 4","Emotion CATA 4","Sensory CATA 4",`;
-    headerCSV += `"Liking 5","Intension 5","Emotion CATA 5","Sensory CATA 5"`;
+    headerCSV += `"Sample 1","Liking 1",${intension1HeaderCSV},"Emotion CATA 1","Sensory CATA 1",`;
+    headerCSV += `"Sample 2","Liking 2",${intension2HeaderCSV},"Emotion CATA 2","Sensory CATA 2",`;
+    headerCSV += `"Sample 3","Liking 3",${intension3HeaderCSV},"Emotion CATA 3","Sensory CATA 3",`;
+    headerCSV += `"Sample 4","Liking 4",${intension4HeaderCSV},"Emotion CATA 4","Sensory CATA 4",`;
+    headerCSV += `"Sample 5","Liking 5",${intension5HeaderCSV},"Emotion CATA 5","Sensory CATA 5"`;
     headerCSV += "\n";
     return headerCSV;
 } 
@@ -313,7 +351,7 @@ app.post(["/submitHCD", "/feast/submitHCD"], (req, resp) => {
             }
             else {
                 const csvHeader = constructHcdCSVHeader();
-                console.log(csvHeader);
+                //console.log(csvHeader);
                 fs.writeFileSync(HCD_OUTPUT_FILE, csvHeader);
                 fs.appendFile(HCD_OUTPUT_FILE, csv, () => { });
             }
