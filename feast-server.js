@@ -11,7 +11,7 @@ const HCD_OUTPUT_FILE =     "./public/jWScUE44eR.csv";
 
 const app = express();
 const port = 8010
-let emotionCataData, sensoryCataData, falsePositiveData, sampleData;
+let emotionCataData, sensoryCataData, falsePositiveData, sampleData, intensionData;
 
 function constructHcdCSVHeader(){
     let headerCSV = `"Date","Time","IP","ID","Session","Sequence","S1","S2","S3","S4","S5",`;
@@ -157,6 +157,33 @@ function readFalsePositiveData() {
     });
 }
 
+function readIntensionData() {
+    const cataData = [];
+    let arr;
+
+    return new Promise(function (resolve, reject) {
+
+        try {
+            const rl = readline.createInterface({
+                input: fs.createReadStream("intension.csv"),
+                crlfDelay: Infinity
+            });
+
+            rl.on("line", (line) => {
+                arr = line.split(",");
+                cataData.push(arr);
+            });
+
+            events.once(rl, "close")
+                .then(() => {
+                    resolve(cataData);
+                });
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
 
 app.use(express.json());
 app.disable("x-powered-by");
@@ -181,6 +208,17 @@ app.get("/sensoryCata", (req, resp) => {
     const id = parseInt(req.query.id, 10);
     if(!isNaN(id) && id >= 0 && id < (sampleData.length + 1)){
         resp.send(sensoryCataData[id - 1]);
+    }
+    else{
+        resp.statusMessage = `Bad ID: ${id}`;
+        resp.status(400).end();
+    }
+});
+
+app.get("/intension", (req, resp) => {
+    const id = parseInt(req.query.id, 10);
+    if(!isNaN(id) && id >= 0 && id < (sampleData.length + 1)){
+        resp.send(intensionData[id].slice(1));
     }
     else{
         resp.statusMessage = `Bad ID: ${id}`;
@@ -292,9 +330,15 @@ app.post(["/submitHCD", "/feast/submitHCD"], (req, resp) => {
 (async () => {
     try {
         sampleData = await readSampleData();
+        console.log("Sample data read.");
         emotionCataData = await readCataData("emotion_cata_1.csv");
+        console.log("Emotion CATA data read.");
         sensoryCataData = await readCataData("sensory_cata_1.csv");
+        console.log("Sensory CATA data read.");
         falsePositiveData = await readFalsePositiveData();
+        console.log("False positive data read.");
+        intensionData = await readIntensionData();
+        console.log("Intension data read.");
         app.listen(port, () => {
             console.log(`Feast server listening locally at http://localhost:${port}`)
         });

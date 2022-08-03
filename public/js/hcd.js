@@ -14,6 +14,7 @@ let sequence = false;
 let falsePositiveData;
 let emotionCataData;
 let sensoryCataData;
+let intensionData;
 let globalsampleData;
 let sampleData;
 
@@ -28,6 +29,12 @@ async function loadEmotionCataData() {
     const emotionCataStream = await fetch(`emotionCata?id=${participantId}`);
     emotionCataData = await emotionCataStream.json();
     console.log("Emotion CATA data loaded.");
+}
+
+async function loadIntensionData() {
+    const intensionStream = await fetch(`intension?id=${participantId}`);
+    intensionData = await intensionStream.json();
+    console.log("Intension data loaded.");
 }
 
 async function loadSensoryCataData() {
@@ -65,6 +72,7 @@ async function doLandingPage() {
             await loadFalsePositiveData();
             await loadEmotionCataData();
             await loadSensoryCataData();
+            await loadIntensionData();
 
             nextBtn.removeEventListener("click", nextBtnClick);
             input.removeEventListener("input", participantInputChange);
@@ -226,15 +234,15 @@ async function run() {
     csv += await doLandingPage();
     console.log(csv);
     await doWelcomePage();
-    //csv += await Calibration.doCalibrationTask();
-    //console.log(csv);
-    csv += await FalsePositives.doFalsePositiveTask(falsePositiveData);
+ /*    csv += await Calibration.doCalibrationTask();
     console.log(csv);
+    csv += await FalsePositives.doFalsePositiveTask(falsePositiveData);
+    console.log(csv); */
     await doPracticeCompletedPage();
     console.log(csv);
-    csv += await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData });
+    csv += await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
-    csv += await Product.doProduct({ sampleCode: sampleData[1], sequence, emotionCataData, sensoryCataData });
+    csv += await Product.doProduct({ sampleCode: sampleData[1], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
     const reply = await Utility.postHcdCSV(csv);
     console.log(reply);

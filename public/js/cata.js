@@ -89,12 +89,12 @@ function doResponsePage() {
         function buttonClick(evt) {
             evt.currentTarget.checked = !evt.currentTarget.checked;
             if (evt.currentTarget.checked) {
-                evt.currentTarget.classList.add("btn-success");
-                evt.currentTarget.classList.remove("btn-danger");
+                evt.currentTarget.classList.add("btn-warning");
+                evt.currentTarget.classList.remove("btn-secondary");
             }
             else {
-                evt.currentTarget.classList.add("btn-danger");
-                evt.currentTarget.classList.remove("btn-success");
+                evt.currentTarget.classList.add("btn-secondary");
+                evt.currentTarget.classList.remove("btn-warning");
             }
             nextBtn.disabled = noSelectionMade();
         }
@@ -108,7 +108,7 @@ function doResponsePage() {
             let result = "";
             buttons.forEach(btn => {
                 if (btn.checked) {
-                    result += `${btn.innerHTML} `;
+                    result += `${btn.innerHTML};`;
                 }
             });
             removeListeners();
@@ -122,8 +122,8 @@ function doResponsePage() {
             btn.classList.add("invisible");
             btn.addEventListener("click", buttonClick);
             btn.checked = false;
-            btn.classList.remove("btn-success");
-            btn.classList.add("btn-danger");
+            btn.classList.remove("btn-warning");
+            btn.classList.add("btn-secondary");
         });
 
         for (let i = 0; i < cataDataIndices.cata.length; i++) {
