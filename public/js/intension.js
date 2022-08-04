@@ -161,7 +161,7 @@ async function doIntensionTask({ sampleCode, intensionData }) {
     Utility.sortByKey(responses, "word");
     csv = "";
     for(let resp of responses){
-        csv += `${resp.rt} ${resp.word},`;
+        csv += `${resp.rt},`;
     }
     csv = csv.slice(0,-1);
     Utility.showJumbos();
