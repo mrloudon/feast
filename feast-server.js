@@ -40,10 +40,10 @@ function constructHcdCSVHeader(){
         ];
         let intensionCSV = "";
         emotionWords.forEach(word => {
-            intensionCSV += `,${sampleNumber}-1 ${word},${sampleNumber}-2 ${word}`;
+            intensionCSV += `${sampleNumber}-1 ${word},${sampleNumber}-2 ${word},`;
         });
     
-        return intensionCSV;
+        return intensionCSV.slice(0,-1);
     }
 
     const intension1HeaderCSV = makeIntensionCsvHeader("1");
