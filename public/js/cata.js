@@ -4,12 +4,12 @@ let cataDataIndices, index, sample;
 
 const headers = [
     `<ol>
-        <li>Please cleans your palate with a bite of crackers and few sips of water.</li>
-        <li>Now taste the whole volume in one cup of <strong>sample <span class="sample-span"></span></strong> and select all applicable emotion words from the list below.</li>
+        <li>Please cleanse your palate with a bite of cracker and a few sips of water.</li>
+        <li>Now taste the whole volume in one cup of <strong>sample <span class="sample-span"></span></strong> and select all the emotion words that match how that sample made you feel from the list below.</li>
     </ol>`,
     `<ol>
-        <li>Please cleans your palate with a bite of crackers and few sips of water.</li>
-        <li>Now taste the whole volume in one cup of <strong>sample <span class="sample-span"></span></strong> and select all applicable sensory attributes from the list below.</li>
+        <li>Please cleanse your palate with a bite of cracker and a few sips of water.</li>
+        <li>Now taste the whole volume in one cup of <strong>sample <span class="sample-span"></span></strong> and select all the sensory attributes that you perceived from the list below.</li>
     </ol>`
 ];
 
