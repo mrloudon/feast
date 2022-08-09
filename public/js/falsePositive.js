@@ -217,7 +217,7 @@ function doPracticeTask2(p) {
     const wordDiv = page.querySelector(".word-div");
     const ITI_1 = 3000;
     const ITI_2 = 500;
-    const N_TRIALS = 8;
+    const N_TRIALS = 10;
 
     return new Promise(function (resolve) {
 
