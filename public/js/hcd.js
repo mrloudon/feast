@@ -234,11 +234,11 @@ async function run() {
     csv += await doLandingPage();
     console.log(csv);
     await doWelcomePage();
-    /* csv += await Calibration.doCalibrationTask();
+    csv += await Calibration.doCalibrationTask();
     console.log(csv);
     csv += await FalsePositives.doFalsePositiveTask(falsePositiveData);
     console.log(csv);
-    await doPracticeCompletedPage(); */
+    await doPracticeCompletedPage();
     console.log(csv);
     csv += await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
