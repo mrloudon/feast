@@ -18,6 +18,15 @@ let intensionData;
 let globalsampleData;
 let sampleData;
 
+const practiceSessionFalsePositiveData = [
+    {
+        words: ["Flower", "Ball", "Tree", "Heart", "Four", "Apple", "Two", "Seven", "Five", "Nine"]
+    },
+    {
+        words: ["Tree", "Flower", "Four", "Ball", "Two", "Heart", "Five", "Apple", "Nine", "Seven"]
+    }
+];
+
 async function loadGlobalSampleData() {
     const sampleStream = await fetch("samples");
     const data = await sampleStream.json();
@@ -171,11 +180,28 @@ function doWelcomePage() {
     });
 }
 
+function doPracticeSessionCompletedPage() {
+    const page = document.getElementById("practice-session-completed-page");
+    const nextBtn = page.querySelector(".next-btn");
+
+    return new Promise(function (resolve) {
+        function nextBtnClick() {
+            nextBtn.removeEventListener("click", nextBtnClick);
+            Utility.fadeOut(page)
+                .then(resolve);
+        }
+
+        nextBtn.addEventListener("click", nextBtnClick);
+        Utility.showJumbos();
+        Utility.fadeIn(page);
+    });
+}
+
 function doGoodbyePage() {
     const page = document.getElementById("goodbye-page");
     const heading = page.querySelector("h1");
 
-    function headingTap(){
+    function headingTap() {
         heading.removeEventListener("click", headingTap);
         location.reload();
     }
@@ -234,6 +260,13 @@ async function run() {
     csv += await doLandingPage();
     console.log(csv);
     await doWelcomePage();
+
+    // Practice session
+    await Calibration.doCalibrationTask();
+    await FalsePositives.doFalsePositiveTask(practiceSessionFalsePositiveData);
+    await doPracticeSessionCompletedPage();
+
+
     csv += await Calibration.doCalibrationTask();
     console.log(csv);
     csv += await FalsePositives.doFalsePositiveTask(falsePositiveData);

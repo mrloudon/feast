@@ -87,6 +87,7 @@ function constructPilotCSVHeader() {
 }
 
 function readSampleData() {
+    const FILE = "SampleOrderWide.csv";
     const cataData = [];
     let first = true;
     let arr;
@@ -95,7 +96,7 @@ function readSampleData() {
 
         try {
             const rl = readline.createInterface({
-                input: fs.createReadStream("SampleOrder.csv"),
+                input: fs.createReadStream(FILE),
                 crlfDelay: Infinity
             });
 
@@ -114,6 +115,7 @@ function readSampleData() {
 
             events.once(rl, "close")
                 .then(() => {
+                    console.log(`Processed sample data in ${FILE}`);
                     resolve(cataData);
                 });
         } catch (err) {
@@ -121,7 +123,6 @@ function readSampleData() {
         }
     });
 }
-
 
 function readCataData(fName) {
     const cataData = [];
