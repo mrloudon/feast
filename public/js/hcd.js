@@ -8,6 +8,20 @@ const bodyKeys = {
     shiftLeft: false
 };
 
+const sampleCodes = {
+    "0": 527,
+    "1": 279,
+    "2": 530,
+    "3": 673,
+    "4": 782,
+    "5": 945,
+    "6": 827,
+    "7": 192,
+    "8": 468,
+    "9": 322,
+    "10": 984
+};
+
 let session = false;
 let participantId = false;
 let sequence = false;
@@ -20,10 +34,10 @@ let sampleData;
 
 const practiceSessionFalsePositiveData = [
     {
-        words: ["Flower", "Ball", "Tree", "Heart", "Four", "Apple", "Two", "Seven", "Five", "Nine"]
+        words: ["Four", "Tree", "Two", "Flower", "Five", "Ball", "Nine", "Heart", "Seven", "Apple"]
     },
     {
-        words: ["Tree", "Flower", "Four", "Ball", "Two", "Heart", "Five", "Apple", "Nine", "Seven"]
+        words: ["Two", "Four", "Five", "Tree", "Nine", "Flower", "Seven", "Ball", "Apple", "Heart"]
     }
 ];
 
@@ -143,7 +157,7 @@ async function doLandingPage() {
         }
 
         function sequenceRBClick(event) {
-            console.log(event.target.value);
+            console.log("Sequence:", event.target.value);
             sequence = event.target.value;
             nextBtn.disabled = !(participantId && session && sequence);
         }
@@ -259,30 +273,45 @@ async function run() {
 
     csv += await doLandingPage();
     console.log(csv);
+
     await doWelcomePage();
 
     // Practice session
-    await Calibration.doCalibrationTask();
-    await FalsePositives.doFalsePositiveTask(practiceSessionFalsePositiveData);
-    await doPracticeSessionCompletedPage();
-
-
+    if(session === "1"){
+        console.log("Practice session.");
+        await Calibration.doCalibrationTask();
+        await FalsePositives.doFalsePositiveTask(practiceSessionFalsePositiveData);
+        await Product.doProduct({ sampleCode: sampleCodes["0"], sequence, emotionCataData, sensoryCataData, intensionData });
+        await doPracticeSessionCompletedPage();
+    }
+    
     csv += await Calibration.doCalibrationTask();
     console.log(csv);
     csv += await FalsePositives.doFalsePositiveTask(falsePositiveData);
     console.log(csv);
     await doPracticeCompletedPage();
     console.log(csv);
-    csv += await Product.doProduct({ sampleCode: sampleData[0], sequence, emotionCataData, sensoryCataData, intensionData });
+
+    csv += await Product.doProduct({ sampleCode: sampleCodes[sampleData[0]], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
-    csv += await Product.doProduct({ sampleCode: sampleData[1], sequence, emotionCataData, sensoryCataData, intensionData });
+    await Product.doCountdownPage();
+
+    csv += await Product.doProduct({ sampleCode: sampleCodes[sampleData[1]], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
-    csv += await Product.doProduct({ sampleCode: sampleData[2], sequence, emotionCataData, sensoryCataData, intensionData });
+    await Product.doCountdownPage();
+
+    csv += await Product.doProduct({ sampleCode: sampleCodes[sampleData[2]], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
-    csv += await Product.doProduct({ sampleCode: sampleData[3], sequence, emotionCataData, sensoryCataData, intensionData });
+    await Product.doCountdownPage();
+
+    csv += await Product.doProduct({ sampleCode: sampleCodes[sampleData[3]], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
+    await Product.doCountdownPage();
+
     csv += await Product.doProduct({ sampleCode: sampleData[4], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
+    await Product.doCountdownPage();
+
     const reply = await Utility.postHcdCSV(csv);
     console.log(reply);
     doGoodbyePage();
