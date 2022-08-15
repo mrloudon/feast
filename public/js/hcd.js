@@ -308,10 +308,9 @@ async function run() {
     console.log(csv);
     await Product.doCountdownPage();
 
-    csv += await Product.doProduct({ sampleCode: sampleData[4], sequence, emotionCataData, sensoryCataData, intensionData });
+    csv += await Product.doProduct({ sampleCode: sampleCodes[sampleData[4]], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
-    await Product.doCountdownPage();
-
+    
     const reply = await Utility.postHcdCSV(csv);
     console.log(reply);
     doGoodbyePage();
