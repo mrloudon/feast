@@ -277,6 +277,7 @@ async function run() {
     await doWelcomePage();
 
     // Practice session
+
     if(session === "1"){
         console.log("Practice session.");
         await Calibration.doCalibrationTask();
@@ -312,9 +313,10 @@ async function run() {
     console.log(csv);
     
     const reply = await Utility.postHcdCSV(csv);
+    (document.getElementById("server-response-div")).innerHTML = reply;
     console.log(reply);
     doGoodbyePage();
-
+ 
     console.log("Done.");
 }
 

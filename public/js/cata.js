@@ -9,7 +9,7 @@ const headers = [
     </ol>`,
     `<ol>
         <li>Please cleanse your palate with a bite of cracker and a few sips of water.</li>
-        <li>Now taste the whole volume in one cup of <strong>sample <span class="sample-span"></span></strong> and select all the sensory attributes that you perceived from the list below.</li>
+        <li>First observe and then taste the whole volume in one cup of <strong>sample <span class="sample-span"></span></strong> and select all the sensory attributes that you perceived from the list below.</li>
     </ol>`
 ];
 
@@ -47,8 +47,8 @@ const sensoryWords = [
     "Nutty flavour",
     "Oaty/cereal flavour",
     "Rice flavour",
-    "Strong flavour",
-    "Sweet taste",
+    "Yellow/brown colour",
+    "Sweet",
     "Thick/viscous",
     "Thin/watery",
     "Weak/bland flavour",
@@ -59,11 +59,19 @@ const sensoryWords = [
     "Salty",
     "Bitter",
     "Metallic",
-    "Umami",
+    "Fruity flavour",
     "Astringent"
 ];
 
 const stimWords = [emotionWords, sensoryWords];
+
+function sanatise(str, length) {
+    let text = str.trim().replace(/(\r\n|\n|\r)/gm, " ").replaceAll(",", " ");
+    text = text.replaceAll("\"", "'");
+    const trimmed = text.length > length ? text.substring(0, length) : text;
+    return trimmed;
+}
+
 
 function doResponsePage() {
 
@@ -72,6 +80,8 @@ function doResponsePage() {
     return new Promise(function (resolve) {
         const page = document.getElementById("cata-response-page");
         const buttons = page.querySelectorAll(".text-scale-item");
+        const textInputDiv = page.querySelector(".sensory-text-div");
+        const sensoryTextInput = document.getElementById("sensory-text-input");
         const nextBtn = page.querySelector(".next-btn");
 
         page.querySelector(".cata-header-div").innerHTML = headers[index];
@@ -112,7 +122,8 @@ function doResponsePage() {
                 }
             });
             removeListeners();
-            result = result.slice(0, -1);
+            //result = result.slice(0, -1);
+            result += sanatise(sensoryTextInput.value, 512);
             console.log(result);
             Utility.fadeOut(page)
                 .then(() => resolve(result));
@@ -133,6 +144,16 @@ function doResponsePage() {
 
         nextBtn.disabled = true;
         nextBtn.addEventListener("click", nextBtnClick);
+        if (index === 1) {
+            textInputDiv.classList.remove("d-none");
+            console.log("Showing text input");
+        }
+        else {
+            textInputDiv.classList.add("d-none");
+            console.log("Hiding text input");
+        }
+
+        sensoryTextInput.value = "";
         Utility.fadeIn(page);
     });
 }
