@@ -87,8 +87,8 @@ function constructPilotCSVHeader() {
 }
 
 function readSampleData() {
-    const FILE = "SampleOrderWide.csv";
-    const cataData = [];
+    const FILE = "SampleOrderWide2_n120.csv";
+    const sData = [];
     let first = true;
     let arr;
 
@@ -109,14 +109,14 @@ function readSampleData() {
                     arr = line.split(",");
                     item.subject = arr[0];
                     item.samples = arr.splice(1);
-                    cataData.push(item);
+                    sData.push(item);
                 }
             });
 
             events.once(rl, "close")
                 .then(() => {
                     console.log(`Processed sample data in ${FILE}`);
-                    resolve(cataData);
+                    resolve(sData);
                 });
         } catch (err) {
             reject(err);

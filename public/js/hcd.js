@@ -293,6 +293,9 @@ async function run() {
     await doPracticeCompletedPage();
     console.log(csv);
 
+
+    console.log(`${sampleCodes[sampleData[0]]} ${sampleCodes[sampleData[1]]} ${sampleCodes[sampleData[2]]} ${sampleCodes[sampleData[3]]} ${sampleCodes[sampleData[4]]}`);
+
     csv += await Product.doProduct({ sampleCode: sampleCodes[sampleData[0]], sequence, emotionCataData, sensoryCataData, intensionData });
     console.log(csv);
     await Product.doCountdownPage();
